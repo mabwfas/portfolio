@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Heroes | Premium Shopify Agency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Orbitron (Futuristic Header) and Rajdhani (Tech Body) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/light-theme-override.css">
+
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --deep-space: #050b14;
+            --hud-grid: rgba(0, 243, 255, 0.05);
+            --glass-panel: rgba(13, 22, 35, 0.85);
+        }
+
+        /* Ambient Space Glow */
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 0.4) 0%, rgba(5, 11, 20, 1) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Card & Panel Styling */
+        .mission-panel {
+            background: var(--glass-panel);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .mission-card {
+            background: rgba(13, 22, 35, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(5px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            background: rgba(13, 22, 35, 0.9);
+        }
+
+        .mission-card:hover .icon-container {
+            color: var(--neon-blue);
+            transform: scale(1.1);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        /* HUD Corners */
+        .hud-corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-color: var(--neon-blue);
+            border-style: solid;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .mission-card:hover .hud-corner,
+        .mission-panel:hover .hud-corner {
+            opacity: 1;
+        }
+
+        .corner-tl {
+            top: 0;
+            left: 0;
+            border-width: 2px 0 0 2px;
+        }
+
+        .corner-tr {
+            top: 0;
+            right: 0;
+            border-width: 2px 2px 0 0;
+        }
+
+        .corner-bl {
+            bottom: 0;
+            left: 0;
+            border-width: 0 0 2px 2px;
+        }
+
+        .corner-br {
+            bottom: 0;
+            right: 0;
+            border-width: 0 2px 2px 0;
+        }
+
+        /* Animations */
+        @keyframes scan {
+            0% {
+                top: -10%;
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to bottom, transparent, var(--neon-blue), transparent);
+            opacity: 0.2;
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+        }
+
+        .section-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .section-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <link rel="stylesheet" href="pitch-deck.css">
+</head>
+
+<body>
+    <div class="ambient-glow"></div>
+
+    <!-- Print Button -->
+    <button class="print-btn no-print" onclick="window.print()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
+            <rect x="6" y="14" width="12" height="8" />
+        </svg>
+        Print to PDF
+    </button>
+
+    <!-- Navigation -->
+    <nav class="slide-nav no-print">
+        <div class="nav-logo">🚀 Digital<span class="highlight">Heroes</span></div>
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn">←</button>
+            <span class="slide-counter"><span id="currentSlide">01</span>/<span id="totalSlides">18</span></span>
+            <button class="nav-btn" id="nextBtn">→</button>
+        </div>
+    </nav>
+
+    <div class="pages-wrapper">
+
+        <!-- PAGE 1: Cover -->
+        <section class="page page-cover-full" data-slide="1">
+            <div class="page-inner">
+                <div class="cover-full-layout">
+                    <!-- Left: Brand + Benefits -->
+                    <div class="cover-left">
+                        <div class="cover-header-compact">
+                            <h1 class="brand-title"
+                                style="font-size: 38px; margin-bottom: 16px; letter-spacing: -0.5px;">Digital <span
+                                    class="gradient-text">Heroes</span></h1>
+                            <p class="founder-intro" style="font-size: 13px; line-height: 1.6; margin-bottom: 8px;">Hi,
+                                I'm <strong>Shreyansh Singh</strong> from <a
+                                    href="https://youtube.com/@DigitalMarketingHeroes" target="_blank"
+                                    class="yt-link">Digital Marketing Heroes</a> with <strong>2.5M+ YouTube
+                                    subscribers</strong>.</p>
+                            <p class="founder-intro" style="font-size: 13px; line-height: 1.6; margin-bottom: 14px;">
+                                Since 2016, I've built <strong>hundreds of profitable businesses</strong>. Running
+                                <strong>3 brands</strong> while consulting <strong>six-figure companies</strong>.
+                            </p>
+                        </div>
+
+                        <div class="glass-benefits">
+                            <div class="glass-card"
+                                style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(236, 72, 153, 0.1)); border: 2.5px solid rgba(99, 102, 241, 0.6); box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);">
+                                <span class="glass-icon" style="font-size: 22px;">💎</span>
+                                <div class="glass-text"><strong
+                                        style="font-size: 14.5px; color: #1a1a1a; font-weight: 700;">Premium Quality,
+                                        Not Cheap</strong><span
+                                        style="color: #1f2937; font-size: 11.5px; font-weight: 500;">We work with
+                                        founders who invest in their foundation</span></div>
+                            </div>
+                            <div class="glass-card"><span class="glass-icon">✅</span>
+                                <div class="glass-text"><strong>2000+ Brands Built</strong><span>Since 2018 - startups
+                                        to multi-million brands</span></div>
+                            </div>
+                            <div class="glass-card"><span class="glass-icon">💼</span>
+                                <div class="glass-text"><strong>$10M+ Sales Generated</strong><span>Through our Business
+                                        Builds</span></div>
+                            </div>
+                            <div class="glass-card"><span class="glass-icon">⚡</span>
+                                <div class="glass-text"><strong>Ultra-Fast Stores (&lt;1.5s)</strong><span>30-40%
+                                        Conversion Boost</span></div>
+                            </div>
+                            <div class="glass-card"><span class="glass-icon">🛡️</span>
+                                <div class="glass-text"><strong>Free Lifetime Support</strong><span>I never disappear
+                                        after delivery</span></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Right: Logo + Capabilities + Team + Guarantee + Links -->
+                    <div class="cover-right">
+                        <!-- 1. Logo -->
+                        <img src="assets/dmh_logo.png" alt="Digital Marketing Heroes" class="cover-logo-img"
+                            style="width: 280px; margin-bottom: 25px; display: block;">
+
+                        <!-- 2. Upper Section: Capabilities Only -->
+                        <div class="capabilities-section" style="margin-bottom: 25px;">
+                            <h3
+                                style="font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                ⚡ Shopify, WordPress & Custom Tech
+                            </h3>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 10px 12px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 16px;">🎨</span>
+                                    <span style="color: #1f2937; font-weight: 600;">Advanced Layouts ✓</span>
+                                </div>
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 10px 12px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 16px;">📦</span>
+                                    <span style="color: #1f2937; font-weight: 600;">Product Configs ✓</span>
+                                </div>
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 10px 12px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 16px;">✨</span>
+                                    <span style="color: #1f2937; font-weight: 600;">Custom Animations ✓</span>
+                                </div>
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 10px 12px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 16px;">💻</span>
+                                    <span style="color: #1f2937; font-weight: 600;">Full Stack / MERN ✓</span>
+                                </div>
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 10px 12px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 16px;">📱</span>
+                                    <span style="color: #1f2937; font-weight: 600;">App Integrations ✓</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Bottom Footer Section (Full Width) -->
+                <div class="cover-bottom-footer"
+                    style="margin-top: 25px; display: grid; grid-template-columns: 1fr; gap: 12px; grid-column: 1 / -1; width: 100%;">
+                    <div class="guarantee-box-full"
+                        style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.05)); border: 2px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <span style="font-size: 36px;">💎</span>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 700; color: #0a0a0a; margin-bottom: 4px;">I do
+                                    care for you:</div>
+                                <div style="font-size: 13px; color: #374151; line-height: 1.4;">100% satisfied or full
+                                    refund. No questions asked.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <a href="https://youtube.com/@DigitalMarketingHeroes" target="_blank"
+                            style="background: #ff0000; color: white; padding: 14px 20px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                                <path
+                                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
+                                <path fill="#ff0000" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg>
+                            2.5M+ Subscribers
+                        </a>
+
+                        <a href="https://digitalheroes.co.in" target="_blank"
+                            style="background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(0, 0, 0, 0.1); color: #0a0a0a; padding: 14px 20px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 600; text-align: center;">
+                            🌐 digitalheroes.co.in
+                        </a>
+
+                        <!-- Moved Team Section -->
+                        <div class="team-section" style="margin-top: 10px;">
+                            <h3
+                                style="font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                👥 Our Team
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div style="font-size: 24px; margin-bottom: 4px;">👨‍💻</div>
+                                    <div style="font-size: 11px; font-weight: 700; color: #0a0a0a; margin-bottom: 2px;">
+                                        Senior Developers</div>
+                                    <div style="font-size: 9px; color: #059669; font-weight: 600;">7-10 Years ✓</div>
+                                </div>
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div style="font-size: 24px; margin-bottom: 4px;">🎨</div>
+                                    <div style="font-size: 11px; font-weight: 700; color: #0a0a0a; margin-bottom: 2px;">
+                                        UI/UX Designers</div>
+                                    <div style="font-size: 9px; color: #059669; font-weight: 600;">7-10 Years ✓</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: 100 Brands Milestone -->
+        <section class="page page-milestone" data-slide="2">
+            <div class="page-inner center" style="padding: 0 !important;">
+                <div style="text-align: center; padding: 20px 0 10px 0;">
+                    <span class="page-tag">Recent Milestone</span>
+                    <h2 style="font-size: 32px; margin: 10px 0;">Over <span class="gradient-text">100 Brands</span>
+                        Built</h2>
+                    <p style="font-size: 18px; color: var(--text-muted); margin: 0;">In the Last 90 Days</p>
+                </div>
+                <img src="assets/brands_showcase_100.png" alt="100 Brands Built in 90 Days"
+                    style="width: 100%; height: auto; display: block; margin: 0; padding: 0;">
+            </div>
+        </section>
+
+        <!-- PAGE 3: YouTube Channel Showcase -->
+        <section class="page page-youtube" data-slide="3">
+            <div class="page-inner center" style="padding: 20px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span class="page-tag">Our Platform</span>
+                    <h2 style="font-size: 32px; margin: 10px 0;">Join <span class="gradient-text">2.6M+
+                            Subscribers</span></h2>
+                    <p style="font-size: 16px; color: #6b7280; margin: 0;">Digital Marketing Heroes on YouTube</p>
+                </div>
+                <a href="https://youtube.com/@DigitalMarketingHeroes" target="_blank"
+                    style="display: block; text-decoration: none; transition: transform 0.3s;">
+                    <img src="assets/youtube_channel_screenshot.jpg" alt="Digital Marketing Heroes YouTube Channel"
+                        style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); transition: transform 0.3s;">
+                </a>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="font-size: 14px; color: #374151; margin: 0 0 10px 0;">🎥 <strong>509+ Videos</strong> | 💡
+                        <strong>Business & Marketing</strong> | 🚀 <strong>Growth Hacking</strong>
+                    </p>
+                    <a href="https://youtube.com/@DigitalMarketingHeroes" target="_blank"
+                        style="display: inline-block; background: #ff0000; color: white; padding: 12px 28px; border-radius: 25px; text-decoration: none; font-weight: 700; font-size: 15px; transition: all 0.3s;">
+                        ▶ Subscribe Now
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: Portfolio (Stores 1-4) -->
+        <section class="page page-portfolio" data-slide="4">
+            <div class="page-inner">
+                <span class="page-tag">Portfolio</span>
+                <h2>Stores We've Built</h2>
+                <div class="quad-store-grid">
+                    <div class="store-card">
+                        <img src="assets/nutripawsplus_mockup_1768228396954.png" alt="Formedgen">
+                        <div class="store-info">
+                            <h3>Formedgen</h3>
+                            <p class="store-niche">📓 Guided Journals</p>
+                            <div class="store-results">
+                                <div class="result"><span>+245%</span>Revenue</div>
+                                <div class="result"><span>1.2s</span>Load</div>
+                                <div class="result"><span>+38%</span>Conv.</div>
+                            </div>
+                            <a href="https://formedgen.com/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                    <div class="store-card">
+                        <img src="assets/biggamesports_mockup_1768228416349.png" alt="Big Game Sports">
+                        <div class="store-info">
+                            <h3>Big Game Sports</h3>
+                            <p class="store-niche">⚽ Sports Equipment</p>
+                            <div class="store-results">
+                                <div class="result"><span>+312%</span>Sales</div>
+                                <div class="result"><span>1.4s</span>Load</div>
+                                <div class="result"><span>+42%</span>Conv.</div>
+                            </div>
+                            <a href="https://biggamesports.co.uk/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                    <div class="store-card">
+                        <img src="assets/nobleeurope_mockup_1768228433886.png" alt="Noble Europe">
+                        <div class="store-info">
+                            <h3>Noble Europe</h3>
+                            <p class="store-niche">🌸 Premium Perfumes</p>
+                            <div class="store-results">
+                                <div class="result"><span>+198%</span>Revenue</div>
+                                <div class="result"><span>1.1s</span>Load</div>
+                                <div class="result"><span>+52%</span>Conv.</div>
+                            </div>
+                            <a href="https://noble-europe.com/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                    <div class="store-card">
+                        <img src="assets/coffeecupshop_mockup_1768228468409.png" alt="CoffeeCupShop">
+                        <div class="store-info">
+                            <h3>CoffeeCupShop</h3>
+                            <p class="store-niche">☕ Custom Drinkware</p>
+                            <div class="store-results">
+                                <div class="result"><span>+267%</span>Revenue</div>
+                                <div class="result"><span>1.3s</span>Load</div>
+                                <div class="result"><span>+45%</span>Conv.</div>
+                            </div>
+                            <a href="https://coffeecupshop.eu/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 5: Portfolio (Stores 5-8) -->
+        <section class="page page-portfolio alt" data-slide="5">
+            <div class="page-inner">
+                <div class="quad-store-grid">
+                    <div class="store-card">
+                        <img src="assets/lovethisforuscoffee_mockup_1768228498542.png" alt="Love This For Us">
+                        <div class="store-info">
+                            <h3>Love This For Us</h3>
+                            <p class="store-niche">❤️ Specialty Coffee & Merch</p>
+                            <div class="store-results">
+                                <div class="result"><span>+178%</span>Revenue</div>
+                                <div class="result"><span>1.2s</span>Load</div>
+                                <div class="result"><span>+35%</span>Conv.</div>
+                            </div>
+                            <a href="https://lovethisforuscoffee.com/" target="_blank" class="store-link">Visit Store
+                                ↗</a>
+                        </div>
+                    </div>
+                    <div class="store-card">
+                        <img src="assets/nutripium_mockup_1768228518261.png" alt="Nutripium">
+                        <div class="store-info">
+                            <h3>Nutripium</h3>
+                            <p class="store-niche">💊 Supplements</p>
+                            <div class="store-results">
+                                <div class="result"><span>+224%</span>Revenue</div>
+                                <div class="result"><span>1.1s</span>Load</div>
+                                <div class="result"><span>+48%</span>Conv.</div>
+                            </div>
+                            <a href="https://www.nutripium.com/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                    <div class="store-card">
+                        <img src="assets/theawwshop_mockup_1768228543038.png" alt="The Aww Shop">
+                        <div class="store-info">
+                            <h3>The Aww Shop</h3>
+                            <p class="store-niche">🎨 Mindful Apparel</p>
+                            <div class="store-results">
+                                <div class="result"><span>+189%</span>Revenue</div>
+                                <div class="result"><span>1.3s</span>Load</div>
+                                <div class="result"><span>+41%</span>Conv.</div>
+                            </div>
+                            <a href="https://theawwshop.com/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                    <div class="store-card">
+                        <img src="assets/florjewelry_mockup_1768228559321.png" alt="Island Hoppers">
+                        <div class="store-info">
+                            <h3>Island Hoppers</h3>
+                            <p class="store-niche">🌊 Water Sports</p>
+                            <div class="store-results">
+                                <div class="result"><span>+298%</span>Revenue</div>
+                                <div class="result"><span>1.2s</span>Load</div>
+                                <div class="result"><span>+56%</span>Conv.</div>
+                            </div>
+                            <a href="https://hj8kbg-ts.myshopify.com/" target="_blank" class="store-link">Visit Store
+                                ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 6: Portfolio (Stores 9-10) -->
+        <section class="page page-portfolio" data-slide="6">
+            <div class="page-inner">
+                <div class="quad-store-grid">
+                    <div class="store-card">
+                        <img src="assets/impactmob_mockup_1768228629385.png" alt="Berks Diesel">
+                        <div class="store-info">
+                            <h3>Berks Diesel</h3>
+                            <p class="store-niche">🚛 Automotive</p>
+                            <div class="store-results">
+                                <div class="result"><span>+356%</span>Revenue</div>
+                                <div class="result"><span>1.4s</span>Load</div>
+                                <div class="result"><span>+62%</span>Conv.</div>
+                            </div>
+                            <a href="https://berksdiesel.com/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                    <div class="store-card">
+                        <img src="assets/tkopain_mockup_1768228652382.png" alt="TKO Pain">
+                        <div class="store-info">
+                            <h3>TKO Pain</h3>
+                            <p class="store-niche">💪 Pain Relief</p>
+                            <div class="store-results">
+                                <div class="result"><span>+234%</span>Revenue</div>
+                                <div class="result"><span>1.1s</span>Load</div>
+                                <div class="result"><span>+49%</span>Conv.</div>
+                            </div>
+                            <a href="https://tkopain.net/" target="_blank" class="store-link">Visit Store ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 7: Client Logos -->
+        <section class="page page-clients" data-slide="7">
+            <div class="page-inner center">
+                <span class="page-tag">Our Clients</span>
+                <h2>Brands That <span class="gradient-text">Trust Us</span></h2>
+                <img src="assets/client_logos.png" alt="Our Clients" class="clients-img">
+                <a href="https://www.figma.com/design/uz7W70LLi2uHDokNAJEaJQ/All-Projects---Demo?node-id=0-1&p=f"
+                    target="_blank" class="figma-link">📁 View More Projects on Figma →</a>
+            </div>
+        </section>
+
+        <!-- PAGE 8: CRO Playbook Page 1 -->
+        <section class="page page-cro" data-slide="8">
+            <div class="page-inner center">
+                <span class="page-tag">CRO Playbook</span>
+                <h2>Our Playbook That <span class="gradient-text">Skyrockets</span> Conversion</h2>
+                <p class="cro-subtitle">💡 $100M+ worth of Shopify split-tests reverse-engineered</p>
+                <div class="cro-mega-grid four-up">
+                    <div class="cro-item"><img src="assets/cro_playbook.png" alt="CRO Playbook"></div>
+                    <div class="cro-item"><img src="assets/cro_paradym.png" alt="Paradym"></div>
+                    <div class="cro-item"><img src="assets/cro_afg.png" alt="AFG"></div>
+                    <div class="cro-item"><img src="assets/cro_perfy.png" alt="Perfy"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 9: CRO Playbook Page 2 -->
+        <section class="page page-cro alt" data-slide="9">
+            <div class="page-inner center">
+                <span class="page-tag">CRO Playbook</span>
+                <h2>More <span class="gradient-text">Conversion</span> Tactics</h2>
+                <div class="cro-mega-grid four-up">
+                    <div class="cro-item"><img src="assets/cro_cloudy.png" alt="Cloudy"></div>
+                    <div class="cro-item"><img src="assets/cro_vitruvian.png" alt="Vitruvian"></div>
+                    <div class="cro-item"><img src="assets/cro_nano.png" alt="NanoXtreme"></div>
+                    <div class="cro-item"><img src="assets/cro_belt.png" alt="Belt Store"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 10: CRO Playbook Page 3 -->
+        <section class="page page-cro" data-slide="10">
+            <div class="page-inner center">
+                <span class="page-tag">CRO Playbook</span>
+                <h2>Landing Page <span class="gradient-text">Optimization</span></h2>
+                <div class="cro-mega-grid four-up">
+                    <div class="cro-item"><img src="assets/cro_landing.png" alt="Landing"></div>
+                    <div class="cro-item"><img src="assets/cro_product.png" alt="Product Page"></div>
+                    <div class="cro-item"><img src="assets/cro_snow.png" alt="Snow"></div>
+                    <div class="cro-item"><img src="assets/cro_maca.png" alt="Maca"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 11: CRO Playbook Page 4 -->
+        <section class="page page-cro alt" data-slide="11">
+            <div class="page-inner center">
+                <span class="page-tag">CRO Playbook</span>
+                <h2>Product Page <span class="gradient-text">Tactics</span></h2>
+                <div class="cro-mega-grid four-up">
+                    <div class="cro-item"><img src="assets/cro_pricing.png" alt="Pricing"></div>
+                    <div class="cro-item"><img src="assets/cro_ingredients.png" alt="Ingredients"></div>
+                    <div class="cro-item"><img src="assets/cro_rho.png" alt="Rho"></div>
+                    <div class="cro-item"><img src="assets/cro_headline.png" alt="Headline"></div>
+                </div>
+                <p class="cro-note">We apply these proven tactics to every store we build</p>
+            </div>
+        </section>
+
+        <!-- PAGE: Our Services -->
+        <section class="page page-services-new" data-slide="14">
+            <div class="page-inner">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <span class="page-tag">What We Do</span>
+                    <h2 style="font-size: 36px; margin: 12px 0 8px 0; color: #0a0a0a;">Our <span
+                            class="gradient-text">Services</span></h2>
+                    <p style="color: #6b7280; font-size: 15px;">Premium development solutions for ambitious brands</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+                    <!-- Service 1 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px; transition: all 0.3s;">
+                        <div style="font-size: 36px; margin-bottom: 16px;">🚀</div>
+                        <h3 style="font-size: 20px; font-weight: 700; color: #0a0a0a; margin-bottom: 10px;">0-To-1 Brand
+                            Incubation</h3>
+                        <p style="color: #4b5563; font-size: 14px; line-height: 1.6;">Launching new concepts into market
+                            leaders with rapid growth strategy, identity design, and MVP development. We build
+                            foundations that scale.</p>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px; transition: all 0.3s;">
+                        <div style="font-size: 36px; margin-bottom: 16px;">⚡</div>
+                        <h3 style="font-size: 20px; font-weight: 700; color: #0a0a0a; margin-bottom: 10px;">Performance
+                            Optimization</h3>
+                        <p style="color: #4b5563; font-size: 14px; line-height: 1.6;">Transforming slow stores into
+                            lightning-fast experiences. Sub-1.5s load times that boost conversions by 30-40%. Speed is
+                            revenue.</p>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px; transition: all 0.3s;">
+                        <div style="font-size: 36px; margin-bottom: 16px;">💻</div>
+                        <h3 style="font-size: 20px; font-weight: 700; color: #0a0a0a; margin-bottom: 10px;">Full Stack
+                            Development</h3>
+                        <p style="color: #4b5563; font-size: 14px; line-height: 1.6;">MERN stack expertise for complex
+                            applications. Custom APIs, database architecture, authentication systems, and cloud
+                            deployment (AWS, Vercel).</p>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px; transition: all 0.3s;">
+                        <div style="font-size: 36px; margin-bottom: 16px;">🎨</div>
+                        <h3 style="font-size: 20px; font-weight: 700; color: #0a0a0a; margin-bottom: 10px;">CRO-Driven
+                            Design</h3>
+                        <p style="color: #4b5563; font-size: 14px; line-height: 1.6;">Conversion Rate Optimization
+                            backed by $100M+ in split-tests. Data-driven design that converts at 4.2% vs industry 1.8%.
+                        </p>
+                    </div>
+
+                    <!-- Service 5 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px; transition: all 0.3s;">
+                        <div style="font-size: 36px; margin-bottom: 16px;">🔧</div>
+                        <h3 style="font-size: 20px; font-weight: 700; color: #0a0a0a; margin-bottom: 10px;">Custom
+                            Integrations</h3>
+                        <p style="color: #4b5563; font-size: 14px; line-height: 1.6;">Seamless third-party integrations:
+                            Stripe, PayPal, CRMs, marketing tools, shipping APIs, and custom API development for your
+                            tech stack.</p>
+                    </div>
+
+                    <!-- Service 6 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px; transition: all 0.3s;">
+                        <div style="font-size: 36px; margin-bottom: 16px;">📈</div>
+                        <h3 style="font-size: 20px; font-weight: 700; color: #0a0a0a; margin-bottom: 10px;">Scaling &
+                            Maintenance</h3>
+                        <p style="color: #4b5563; font-size: 14px; line-height: 1.6;">Performance optimization, database
+                            scaling, security updates, and ongoing support. Your application stays current and handles
+                            growth.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: Our Process -->
+        <section class="page page-process-new" data-slide="12">
+            <div class="page-inner">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <span class="page-tag">How We Work</span>
+                    <h2 style="font-size: 36px; margin: 12px 0 8px 0; color: #0a0a0a;">Our <span
+                            class="gradient-text">Process</span></h2>
+                    <p style="color: #6b7280; font-size: 15px;">From concept to market dominance</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+                    <!-- Step 1 -->
+                    <div
+                        style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(236, 72, 153, 0.04)); border: 2px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 28px;">
+                        <div
+                            style="display: inline-block; background: linear-gradient(135deg, #6366f1, #ec4899); color: white; font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 13px; margin-bottom: 16px;">
+                            PHASE 1</div>
+                        <h3 style="font-size: 22px; font-weight: 700; color: #0a0a0a; margin-bottom: 12px;">Research &
+                            Strategy</h3>
+                        <p style="color: #374151; font-size: 14px; line-height: 1.7;">Deep-dive strategy call to
+                            understand your vision, target audience, and goals. We create a detailed roadmap,
+                            wireframes, and technical architecture. No guesswork - pure data-driven planning.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px;">
+                        <div
+                            style="display: inline-block; background: #1f2937; color: white; font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 13px; margin-bottom: 16px;">
+                            PHASE 2</div>
+                        <h3 style="font-size: 22px; font-weight: 700; color: #0a0a0a; margin-bottom: 12px;">Design &
+                            Development</h3>
+                        <p style="color: #374151; font-size: 14px; line-height: 1.7;">We build with precision: clean
+                            code, pixel-perfect design, and CRO-optimized layouts. Weekly progress updates, full
+                            transparency through our project dashboard. Collaborative development, not disappearing
+                            acts.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div
+                        style="background: #ffffff; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 12px; padding: 28px;">
+                        <div
+                            style="display: inline-block; background: #1f2937; color: white; font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 13px; margin-bottom: 16px;">
+                            PHASE 3</div>
+                        <h3 style="font-size: 22px; font-weight: 700; color: #0a0a0a; margin-bottom: 12px;">Testing &
+                            Optimization</h3>
+                        <p style="color: #374151; font-size: 14px; line-height: 1.7;">Rigorous quality assurance,
+                            performance testing, and conversion optimization. We stress-test every flow, optimize every
+                            millisecond, and ensure bulletproof functionality across all devices.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div
+                        style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(16, 185, 129, 0.04)); border: 2px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 28px;">
+                        <div
+                            style="display: inline-block; background: linear-gradient(135deg, #22c55e, #10b981); color: white; font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 13px; margin-bottom: 16px;">
+                            PHASE 4</div>
+                        <h3 style="font-size: 22px; font-weight: 700; color: #0a0a0a; margin-bottom: 12px;">Launch &
+                            Support</h3>
+                        <p style="color: #374151; font-size: 14px; line-height: 1.7;">Deployment, documentation, team
+                            training, and 30 days post-launch support. Plus lifetime technical guidance. We don't
+                            disappear after delivery - we're invested in your success.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 13: Fiverr Reviews Page 1 -->
+        <section class="page page-fiverr" data-slide="13">
+            <div class="page-inner center">
+                <span class="page-tag">Client Reviews</span>
+                <h2>What Clients Say on <span class="gradient-text">Fiverr</span></h2>
+                <div class="fiverr-profile">
+                    <img src="assets/fiverr_profile.png" alt="Fiverr Profile" class="fiverr-profile-img">
+                    <div class="fiverr-badge">⭐ 4.9 Rating • 100+ Reviews • Fiverr Pro Vetted</div>
+                </div>
+                <div class="fiverr-reviews-grid">
+                    <div class="fiverr-review"><img src="assets/fiverr_review1.png" alt="Review"></div>
+                    <div class="fiverr-review"><img src="assets/fiverr_review2.png" alt="Review"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 14: Fiverr Reviews Page 2 -->
+        <section class="page page-fiverr alt" data-slide="14">
+            <div class="page-inner center">
+                <span class="page-tag">More Reviews</span>
+                <h2>Clients <span class="gradient-text">Love</span> Working With Us</h2>
+                <div class="fiverr-reviews-grid">
+                    <div class="fiverr-review"><img src="assets/fiverr_review3.png" alt="Review"></div>
+                    <div class="fiverr-review"><img src="assets/fiverr_review4.png" alt="Review"></div>
+                </div>
+                <div class="fiverr-reviews-grid">
+                    <div class="fiverr-review"><img src="assets/fiverr_review5.png" alt="Review"></div>
+                    <div class="fiverr-review"><img src="assets/fiverr_review6.png" alt="Review"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 15: Fiverr Reviews Page 3 -->
+        <section class="page page-fiverr" data-slide="15">
+            <div class="page-inner center">
+                <span class="page-tag">More Reviews</span>
+                <h2>Even More <span class="gradient-text">5-Star</span> Reviews</h2>
+                <div class="fiverr-reviews-single">
+                    <img src="assets/fiverr_review7.png" alt="Review" class="fiverr-review-large">
+                </div>
+                <a href="https://www.fiverr.com/shreyanshsin261/build-shopify-store-design-redesign-copy-ecommerce-website-dropshipping-store"
+                    target="_blank" class="fiverr-link">🛒 View All Reviews on Fiverr →</a>
+            </div>
+        </section>
+
+        <!-- PAGE 16: Results -->
+        <section class="page page-results" data-slide="16">
+            <div class="page-inner center">
+                <span class="page-tag">Proven Results</span>
+                <h2>What We Deliver</h2>
+                <div class="mega-stats-grid">
+                    <div class="mega-stat"><span class="mega-value">1000+</span><span class="mega-label">Stores
+                            Built</span></div>
+                    <div class="mega-stat featured"><span class="mega-value">$40M+</span><span class="mega-label">Sales
+                            Generated</span></div>
+                    <div class="mega-stat"><span class="mega-value">4.2%</span><span class="mega-label">Conversion
+                            Rate</span></div>
+                    <div class="mega-stat"><span class="mega-value">98%</span><span
+                            class="mega-label">Satisfaction</span>
+                    </div>
+                </div>
+                <div class="testimonial-box">
+                    <p>"Digital Heroes transformed our store completely. Sales increased 250% in the first month!"</p>
+                    <div class="testimonial-author"><span>— Happy Client</span><span class="stars">★★★★★</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 17: FAQ (All Questions) -->
+        <section class="page page-faq" data-slide="17">
+            <div class="page-inner">
+                <span class="page-tag">FAQ</span>
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h4>What makes you different from other developers?</h4>
+                        <p>I have 2.5M+ YouTube subscribers on "Digital Marketing Heroes" and work with major brands
+                            like Hostinger, Loox, and Minea. My proven track record includes building hundreds of
+                            successful stores and full-stack applications with 4.2% conversion rates vs industry
+                            standard 1.8%.</p>
+                    </div>
+                    <div class="faq-item"
+                        style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(236, 72, 153, 0.04)); border: 2px solid rgba(99, 102, 241, 0.3);">
+                        <h4>Are you the cheapest option?</h4>
+                        <p>No, and we're proud of that. We work exclusively with founders who view development as
+                            investing in their foundation, not as an expense. Our value lies in being the highest
+                            quality in the market with proven 4.2% conversion rates and $10M+ in client revenue. If
+                            you're looking for the cheapest option, we respectfully decline – our focus is building
+                            businesses that scale, not cutting corners.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Can you build custom full-stack applications?</h4>
+                        <p>Absolutely! We specialize in MERN stack (MongoDB, Express, React, Node.js) development,
+                            custom APIs, database architecture, and scalable backend solutions. From SaaS platforms to
+                            complex e-commerce systems, we build enterprise-grade applications.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Do you handle both frontend and backend development?</h4>
+                        <p>Yes, we're true full-stack developers. We handle everything: React/Next.js frontends,
+                            Node.js/Express backends, database design, API development, authentication systems, payment
+                            integration, and cloud deployment (AWS, Vercel, Digital Ocean).</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>What if I'm not satisfied?</h4>
+                        <p>Unlimited revisions during development + full refund if not happy. With 4.2% conversion rates
+                            vs 1.8% industry standard and 1000+ successful projects, satisfaction issues are extremely
+                            rare.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Can you integrate with existing systems and APIs?</h4>
+                        <p>Yes! We excel at third-party integrations including payment gateways (Stripe, PayPal), CRMs,
+                            marketing tools, shipping APIs, analytics platforms, and custom API development. We ensure
+                            seamless data flow between all your systems.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>How long does a full-stack project take?</h4>
+                        <p>Simple apps: 2-3 weeks. Medium complexity: 4-6 weeks. Enterprise solutions: 8-12 weeks.
+                            Timeline depends on features and complexity. You get 30 days post-launch support plus
+                            lifetime technical guidance.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Why should I trust you with my project?</h4>
+                        <p>I'm not just a developer - I'm an active entrepreneur running 3 brands while consulting
+                            six-figure businesses. My applications have processed millions in transactions using
+                            battle-tested code I'll implement for you.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Do you provide documentation and training?</h4>
+                        <p>Yes! Every project includes comprehensive technical documentation, API documentation, video
+                            tutorials for your team, and ongoing support. We ensure you can manage and scale your
+                            application independently.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>What tech stack do you recommend for my project?</h4>
+                        <p>We analyze your specific needs and recommend the best stack. Popular choices: MERN (MongoDB,
+                            Express, React, Node.js), Next.js for SEO-critical apps, PostgreSQL for complex data, and
+                            modern deployment on Vercel or AWS.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Can you scale my existing application?</h4>
+                        <p>Absolutely! We specialize in performance optimization, database scaling, API improvements,
+                            and migrating legacy applications to modern tech stacks. We'll audit your current system and
+                            provide a clear scaling roadmap.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Do you offer ongoing maintenance and updates?</h4>
+                        <p>Yes! We provide monthly maintenance packages including bug fixes, security updates, feature
+                            additions, performance monitoring, and technical support. Your application stays current and
+                            secure long-term.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 18: Final CTA - Premium Close -->
+        <section class="page page-contact" data-slide="18">
+            <div class="page-inner center">
+                <div class="scarcity-box">
+                    <h2>⚠️ Limited Availability</h2>
+                    <p class="scarcity-text">We only take <strong>3-5 clients per month</strong> to ensure the highest
+                        standards.</p>
+                </div>
+
+                <span class="page-tag">Ready to Launch?</span>
+                <h2>Let's Build Your <span class="gradient-text">Dream Project</span></h2>
+                <p class="contact-tagline">Whether you're starting fresh, scaling up, or moving your business online —
+                    let's build something bigger together!</p>
+
+                <div class="benefits-section" style="margin: 30px 0;">
+                    <h3>What You Get</h3>
+                    <div class="benefits-grid">
+                        <div class="benefit">✅ Premium Design</div>
+                        <div class="benefit">✅ 4.2% Conversion Rate</div>
+                        <div class="benefit">✅ Full Stack Solutions</div>
+                        <div class="benefit">✅ Free Lifetime Support</div>
+                        <div class="benefit">✅ MERN Stack Expertise</div>
+                        <div class="benefit">✅ Unlimited Revisions</div>
+                        <div class="benefit">✅ Video Training Included</div>
+                        <div class="benefit">✅ Custom API Development</div>
+                    </div>
+                </div>
+
+                <div
+                    style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.05)); border: 2px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 20px; margin: 25px 0; text-align: center;">
+                    <h3 style="font-size: 18px; color: #1a1a1a; margin-bottom: 8px; font-weight: 700;">💎 We Work With
+                        Quality-Focused Founders</h3>
+                    <p style="font-size: 14px; color: #374151; margin: 0; line-height: 1.6;">We partner exclusively with
+                        founders who view development as <strong>investing in their foundation</strong>, not as an
+                        expense. Our value lies in being the <strong>highest quality in the market</strong>, not the
+                        cheapest. If you're looking for the cheapest option, we respectfully decline – our focus is
+                        building businesses that scale, not cutting corners.</p>
+                </div>
+
+                <a href="https://www.fiverr.com/shreyanshsin261/build-shopify-store-design-redesign-copy-ecommerce-website-dropshipping-store"
+                    target="_blank" class="cta-primary large">🛒 Order on Fiverr</a>
+                <div class="contact-grid">
+                    <a href="mailto:hello@digitalheroes.com" class="contact-item">📧 hello@digitalheroes.com</a>
+                    <a href="https://digitalheroes.co.in" target="_blank" class="contact-item">🌐
+                        digitalheroes.co.in</a>
+                </div>
+                <a href="https://youtube.com/@DigitalMarketingHeroes" target="_blank" class="youtube-final">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                        <path
+                            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
+                        <path fill="white" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                    </svg>
+                    <span>@DigitalMarketingHeroes • 2.5M+ Subscribers</span>
+                </a>
+                <p class="final-tagline">🚀 We Launch Brands In New Orbits</p>
+            </div>
+        </section>
+
+    </div>
+    <script src="pitch-deck.js"></script>
+</body>
+
+</html>
