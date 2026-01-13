@@ -1857,7 +1857,7 @@ strong {
     color: var(--text-muted);
 }
 
-/* RESPONSIVE */
+/* RESPONSIVE - TABLET */
 @media (max-width: 900px) {
 
     .hero-stats-row,
@@ -1872,6 +1872,183 @@ strong {
 
     .slide-nav {
         display: none;
+    }
+
+    .cover-full-layout {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .quad-store-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+
+    .pricing-grid,
+    .services-grid,
+    .process-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .fiverr-profile {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .fiverr-profile img {
+        max-width: 100% !important;
+    }
+}
+
+/* RESPONSIVE - MOBILE */
+@media (max-width: 600px) {
+    html {
+        scroll-snap-type: none;
+    }
+
+    .page {
+        min-height: auto !important;
+        height: auto !important;
+        padding: 20px 15px !important;
+        scroll-snap-align: none;
+    }
+
+    .page-inner {
+        padding: 20px 15px !important;
+    }
+
+    h2 {
+        font-size: 24px !important;
+    }
+
+    .brand-title {
+        font-size: 28px !important;
+    }
+
+    .cover-full-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+
+    .cover-left,
+    .cover-right {
+        width: 100% !important;
+    }
+
+    .cover-logo-img {
+        width: 200px !important;
+        margin: 0 auto 20px !important;
+    }
+
+    .glass-benefits {
+        gap: 10px !important;
+    }
+
+    .glass-card {
+        padding: 12px !important;
+    }
+
+    .glass-icon {
+        font-size: 18px !important;
+    }
+
+    .quad-store-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    .store-card {
+        height: auto !important;
+        min-height: 350px !important;
+    }
+
+    .store-card img {
+        height: 200px !important;
+    }
+
+    .store-info {
+        padding: 15px !important;
+    }
+
+    .store-info h3 {
+        font-size: 16px !important;
+    }
+
+    .mega-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .mega-stat {
+        padding: 15px !important;
+    }
+
+    .mega-value {
+        font-size: 24px !important;
+    }
+
+    .cro-mega-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .fiverr-profile {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    .fiverr-profile img {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .fiverr-reviews-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    .milestone-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .print-btn {
+        padding: 8px 14px !important;
+        font-size: 12px !important;
+    }
+
+    .page-tag {
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+    }
+
+    .pricing-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .services-grid,
+    .process-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    .contact-grid {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .cta-primary {
+        padding: 12px 24px !important;
+        font-size: 14px !important;
+    }
+
+    .youtube-channel-screenshot {
+        border-radius: 8px !important;
+    }
+
+    .clients-img {
+        width: 100% !important;
     }
 }
 
