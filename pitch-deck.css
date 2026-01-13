@@ -1203,86 +1203,98 @@ strong {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 20px;
-    /* Reduced gap to maximize content area */
-    height: 100%;
-    padding-bottom: 20px;
-    margin-top: 10px;
+    gap: 10px;
+    height: calc(100% - 40px);
+    padding: 0;
+    margin-top: 5px;
 }
 
 .quad-store-grid .store-card {
     display: flex;
     flex-direction: column;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(0, 0, 0, 0.05);
     height: 100%;
 }
 
 .quad-store-grid .store-card img {
-    height: 380px;
-    /* Massively increased height as requested */
-    min-height: 300px;
     width: 100%;
-    object-fit: contain;
-    object-position: center;
-    background: #f3f4f6;
-    padding: 8px;
-    /* Reduced padding */
-    flex-grow: 1;
-    /* Allow image to take available space */
+    height: 70%;
+    object-fit: cover;
+    object-position: top center;
+    /* Crops from bottom */
+    padding: 0;
+    flex-shrink: 0;
+}
+
+/* Custom Business Websites - zoom in on center */
+.page-custom-websites .quad-store-grid .store-card img {
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.1);
+    transform-origin: center center;
 }
 
 .quad-store-grid .store-info {
-    padding: 12px 16px;
-    /* Compact padding */
-    flex-shrink: 0;
-    /* Prevent info from shrinking image */
+    height: 30%;
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* Distribute content */
+    background: #ffffff;
 }
 
 .quad-store-grid .store-info h3 {
-    font-size: 20px;
-    /* Larger font */
-    margin-bottom: 6px;
+    font-size: 15px;
+    margin: 0 0 4px 0;
     color: #1a1a1a;
     font-weight: 700;
 }
 
 .quad-store-grid .store-niche {
-    font-size: 13px;
+    font-size: 11px;
     color: #6b7280;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .quad-store-grid .store-results {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-top: auto;
-    padding-top: 8px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 12px;
+    margin-bottom: 6px;
 }
 
 .quad-store-grid .result {
-    text-align: center;
-    font-size: 10px;
+    font-size: 9px;
     color: #6b7280;
 }
 
 .quad-store-grid .result span {
-    display: block;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 700;
     color: #059669;
-    /* Green for success */
-    margin-bottom: 2px;
+    margin-right: 3px;
 }
+
+.quad-store-grid .store-link {
+    display: block;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #4f46e5;
+    background: rgba(79, 70, 229, 0.08);
+    padding: 6px;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.quad-store-grid .store-link:hover {
+    background: rgba(79, 70, 229, 0.15);
+}
+
 
 .fiverr-reviews-grid {
     display: grid;
@@ -2238,10 +2250,19 @@ strong {
     .quad-store-grid .store-card img {
         height: 200px !important;
         min-height: 150px !important;
+        object-fit: contain !important;
+        background: #f8f9fa !important;
     }
 
     .quad-store-grid .store-info {
         padding: 10px !important;
         overflow: visible !important;
+    }
+
+    /* Custom Business Websites - show full images without cropping */
+    .page-custom-websites .quad-store-grid .store-card img {
+        object-fit: contain !important;
+        object-position: center !important;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
     }
 }
