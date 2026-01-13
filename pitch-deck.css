@@ -1163,21 +1163,23 @@ strong {
     height: 100%;
 }
 
-.page-portfolio .page-inner {
-    max-width: 1400px;
-    /* Specific override for portfolio pages to use more width */
+.page-portfolio .page-inner,
+.page-milestone .page-inner {
+    max-width: 98vw !important;
+    /* Force full width */
+    width: 98vw !important;
+    padding: 0 10px !important;
 }
 
 .quad-store-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 30px;
-    /* Increased gap */
+    gap: 20px;
+    /* Reduced gap to maximize content area */
     height: 100%;
     padding-bottom: 20px;
-    margin-top: 20px;
-    /* Add some top spacing from title */
+    margin-top: 10px;
 }
 
 .quad-store-grid .store-card {
@@ -1187,30 +1189,29 @@ strong {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    /* Lighter shadow for condensed view */
     border: 1px solid rgba(0, 0, 0, 0.05);
     height: 100%;
-    /* Force card to fill grid cell */
 }
 
 .quad-store-grid .store-card img {
-    height: 240px;
-    /* Significantly increased height to fill space */
-    min-height: 200px;
+    height: 380px;
+    /* Massively increased height as requested */
+    min-height: 300px;
     width: 100%;
     object-fit: contain;
-    /* Ensures full image is visible without cropping */
     object-position: center;
     background: #f3f4f6;
-    /* Light gray background to fill whitespace */
-    padding: 12px;
-    /* Padding to frame the image */
+    padding: 8px;
+    /* Reduced padding */
+    flex-grow: 1;
+    /* Allow image to take available space */
 }
 
 .quad-store-grid .store-info {
-    padding: 20px;
-    /* Increased padding */
-    flex: 1;
+    padding: 12px 16px;
+    /* Compact padding */
+    flex-shrink: 0;
+    /* Prevent info from shrinking image */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
