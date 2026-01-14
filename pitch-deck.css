@@ -1263,12 +1263,11 @@ strong {
     flex-shrink: 0;
 }
 
-/* Custom Business Websites - zoom in on center */
+/* Custom Business Websites - show full image without cropping */
 .page-custom-websites .quad-store-grid .store-card img {
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
-    transform: scale(1.05);
-    transform-origin: center center;
+    background: #f8f9fa;
 }
 
 /* Custom Business Websites - square cards on desktop */
