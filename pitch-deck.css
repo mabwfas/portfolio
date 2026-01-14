@@ -1256,7 +1256,7 @@ strong {
 
 .quad-store-grid .store-card img {
     width: 100%;
-    height: 65%;
+    height: 60%;
     object-fit: cover;
     object-position: top center;
     padding: 0;
@@ -1272,12 +1272,12 @@ strong {
 }
 
 .quad-store-grid .store-info {
-    height: 35%;
-    padding: 8px 12px;
+    height: 40%;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 3px;
+    gap: 4px;
     background: #ffffff;
     overflow: hidden;
 }
