@@ -1268,8 +1268,6 @@ strong {
     object-fit: contain;
     object-position: center center;
     background: #f8f9fa;
-    transform: scale(0.85);
-    padding: 8px;
 }
 
 /* Custom Business Websites - square cards on desktop */
@@ -1307,7 +1305,7 @@ strong {
 .quad-store-grid .store-info h3 {
     font-size: 15px;
     margin: 0 0 8px 0;
-    padding-top: 12px;
+    padding-top: 5px;
     color: #1a1a1a;
     font-weight: 700;
 }
