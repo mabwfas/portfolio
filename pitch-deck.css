@@ -1236,11 +1236,9 @@ strong {
 .quad-store-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 10px;
-    height: calc(100% - 40px);
+    gap: 15px;
     padding: 0;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .quad-store-grid .store-card {
