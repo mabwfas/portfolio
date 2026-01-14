@@ -80,8 +80,8 @@ strong {
 /* Print Button */
 .print-btn {
     position: fixed;
-    top: 16px;
-    right: 16px;
+    bottom: 16px;
+    left: 16px;
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -101,6 +101,29 @@ strong {
 .print-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+}
+
+/* WhatsApp Button */
+.whatsapp-btn {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.whatsapp-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
 }
 
 /* Navigation */
@@ -124,11 +147,13 @@ strong {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 13px;
+    color: white;
 }
 
 .nav-logo .highlight {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -203,6 +228,15 @@ strong {
     width: 100%;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+/* Desktop 70% width constraint */
+@media screen and (min-width: 901px) {
+    .desktop-70 {
+        max-width: 70% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
 }
 
 .page-inner.center {
@@ -1239,11 +1273,11 @@ strong {
 }
 
 .quad-store-grid .store-info {
-    height: 30%;
     padding: 10px 14px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 4px;
     background: #ffffff;
 }
 
@@ -1871,7 +1905,7 @@ strong {
     }
 
     .slide-nav {
-        display: none;
+        display: flex;
     }
 
     .cover-full-layout {
@@ -1909,16 +1943,20 @@ strong {
     .page {
         min-height: auto !important;
         height: auto !important;
-        padding: 20px 15px !important;
+        padding: 20px !important;
         scroll-snap-align: none;
     }
 
     .page-inner {
-        padding: 20px 15px !important;
+        padding: 20px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     h2 {
         font-size: 24px !important;
+        margin-left: 0 !important;
     }
 
     .brand-title {
@@ -1929,11 +1967,14 @@ strong {
         display: flex !important;
         flex-direction: column !important;
         gap: 20px !important;
+        padding: 0 !important;
     }
 
     .cover-left,
     .cover-right {
         width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     .cover-logo-img {
@@ -1943,10 +1984,46 @@ strong {
 
     .glass-benefits {
         gap: 10px !important;
+        padding: 0 !important;
     }
 
     .glass-card {
         padding: 12px !important;
+        margin: 0 !important;
+    }
+
+    .cover-header-compact,
+    .capabilities-section,
+    .team-section {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .cover-bottom-footer {
+        padding: 0 20px !important;
+        margin-top: 20px !important;
+    }
+
+    /* Fix logo and capabilities alignment on mobile */
+    .cover-logo-img {
+        width: 250px !important;
+        margin: 0 auto 20px auto !important;
+        display: block !important;
+    }
+
+    .capabilities-section {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .capabilities-section>div {
+        width: 100% !important;
+    }
+
+    .capabilities-section h3 {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
     }
 
     .glass-icon {
@@ -2133,10 +2210,48 @@ strong {
     .mega-stat,
     .benefit,
     .cap-item,
-    .testimonial-box {
+    .testimonial-box,
+    .pricing-grid>div,
+    .fiverr-review,
+    .fiverr-profile,
+    .fiverr-profile-img,
+    .fiverr-reviews-grid,
+    .services-grid>div,
+    .process-grid>div,
+    .glass-card,
+    .scarcity-box,
+    .benefits-section {
         background: rgba(0, 0, 0, 0.03) !important;
         border: 1.5px solid rgba(0, 0, 0, 0.15) !important;
-        page-break-inside: avoid;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Prevent page breaks inside pricing cards */
+    .pricing-grid {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Fiverr reviews should not break */
+    .page-fiverr .page-inner {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .fiverr-reviews-grid {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Reduce page padding to fit more content */
+    .page {
+        padding: 10mm 5mm !important;
+    }
+
+    /* Scale down Fiverr profile images for print */
+    .fiverr-profile-img {
+        max-width: 300px !important;
     }
 
     .featured,
