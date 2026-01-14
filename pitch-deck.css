@@ -1278,7 +1278,7 @@ strong {
     }
 
     .page-custom-websites .quad-store-grid .store-card {
-        height: 280px;
+        height: 320px;
     }
 
     .page-custom-websites .quad-store-grid .store-card img {
@@ -1286,7 +1286,8 @@ strong {
     }
 
     .page-custom-websites .quad-store-grid .store-info {
-        height: 100px;
+        height: 140px;
+        padding-top: 12px;
     }
 }
 
