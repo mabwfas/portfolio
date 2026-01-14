@@ -1271,23 +1271,24 @@ strong {
     transform-origin: center center;
 }
 
-/* Custom Business Websites - smaller rectangular cards on desktop */
+/* Custom Business Websites - square cards on desktop */
 @media screen and (min-width: 901px) {
     .page-custom-websites .quad-store-grid {
         height: auto;
     }
 
     .page-custom-websites .quad-store-grid .store-card {
-        height: 320px;
+        aspect-ratio: 1 / 1;
+        height: auto;
     }
 
     .page-custom-websites .quad-store-grid .store-card img {
-        height: 180px;
+        height: 55%;
     }
 
     .page-custom-websites .quad-store-grid .store-info {
-        height: 140px;
-        padding-top: 12px;
+        height: 45%;
+        padding-top: 10px;
     }
 }
 
