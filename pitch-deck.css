@@ -1236,9 +1236,11 @@ strong {
 .quad-store-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 15px;
     padding: 0;
     margin-top: 10px;
+    height: calc(100% - 60px);
 }
 
 .quad-store-grid .store-card {
@@ -1246,18 +1248,17 @@ strong {
     flex-direction: column;
     background: #ffffff;
     border-radius: 10px;
-    overflow: visible;
+    overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(0, 0, 0, 0.05);
+    height: 100%;
 }
 
 .quad-store-grid .store-card img {
     width: 100%;
-    height: 200px;
+    height: 65%;
     object-fit: cover;
-    border-radius: 10px 10px 0 0;
     object-position: top center;
-    /* Crops from bottom */
     padding: 0;
     flex-shrink: 0;
 }
@@ -1266,19 +1267,19 @@ strong {
 .page-custom-websites .quad-store-grid .store-card img {
     object-fit: cover;
     object-position: center center;
-    transform: scale(1.1);
+    transform: scale(1.05);
     transform-origin: center center;
 }
 
 .quad-store-grid .store-info {
-    padding: 10px 14px;
+    height: 35%;
+    padding: 8px 12px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 4px;
+    gap: 3px;
     background: #ffffff;
-    min-height: auto;
-    overflow: visible;
+    overflow: hidden;
 }
 
 .quad-store-grid .store-info h3 {
