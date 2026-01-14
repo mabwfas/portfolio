@@ -1271,6 +1271,25 @@ strong {
     transform-origin: center center;
 }
 
+/* Custom Business Websites - smaller rectangular cards on desktop */
+@media screen and (min-width: 901px) {
+    .page-custom-websites .quad-store-grid {
+        height: auto;
+    }
+
+    .page-custom-websites .quad-store-grid .store-card {
+        height: 280px;
+    }
+
+    .page-custom-websites .quad-store-grid .store-card img {
+        height: 180px;
+    }
+
+    .page-custom-websites .quad-store-grid .store-info {
+        height: 100px;
+    }
+}
+
 .quad-store-grid .store-info {
     height: 40%;
     padding: 10px 12px;
