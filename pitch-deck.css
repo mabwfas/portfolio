@@ -192,7 +192,7 @@ strong {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: 6px;
-    color: var(--text-primary);
+    color: white;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -205,7 +205,7 @@ strong {
 
 .slide-counter {
     font-size: 12px;
-    color: var(--text-muted);
+    color: white;
 }
 
 /* Pages */
