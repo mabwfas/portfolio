@@ -1,0 +1,46 @@
+body {
+    background: #ffffff;
+    color: #1a1a1a;
+}
+
+/* Improve contrast for light background */
+.mission-card {
+    background: #ffffff;
+    border: 2px solid rgba(0, 102, 204, 0.15);
+    color: #1a1a1a;
+}
+
+.mission-card:hover {
+    border-color: #0066cc;
+    background: #fafbfc;
+    box-shadow: 0 8px 30px rgba(0, 102, 204, 0.15);
+}
+
+.mission-panel {
+    background: #ffffff;
+    border: 2px solid rgba(0, 102, 204, 0.2);
+    color: #1a1a1a;
+}
+
+/* Text colors for better contrast */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #1a1a1a !important;
+}
+
+p {
+    color: #374151 !important;
+}
+
+/* Icon colors */
+.icon-container {
+    color: #6b7280;
+}
+
+.mission-card:hover .icon-container {
+    color: #0066cc;
+}
