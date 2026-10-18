@@ -59,6 +59,34 @@ function buildEmail(f) {
     return { text, html };
 }
 
+// GET /api/contact?health=1 -> is the form able to send? Sends no email.
+// Reports only booleans and the sender domain, never the key.
+async function health() {
+    const from = process.env.RESEND_FROM || FROM_DEFAULT;
+    const senderDomain = (from.match(/@([^>\s]+)/) || [])[1] || null;
+    const out = { keyConfigured: Boolean(process.env.RESEND_API_KEY), keyAccepted: null, senderDomain, senderVerified: null };
+    if (!out.keyConfigured) return { ...out, ready: false, fix: 'Add RESEND_API_KEY to the Production environment and redeploy.' };
+    try {
+        const r = await fetch('https://api.resend.com/domains', { headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}` } });
+        const body = await r.json().catch(() => ({}));
+        if (r.ok) {
+            const d = (body.data || []).find((x) => x.name === senderDomain);
+            out.keyAccepted = true;
+            out.senderVerified = Boolean(d && d.status === 'verified');
+            return { ...out, ready: out.senderVerified, fix: out.senderVerified ? null : `Verify ${senderDomain} in this Resend account, or set RESEND_FROM to an address on a verified domain.` };
+        }
+        if (r.status === 401 && body.name === 'restricted_api_key') {
+            // A sending-only key cannot list domains; it is valid, the domain is unknown.
+            out.keyAccepted = true;
+            return { ...out, ready: null, fix: 'Key is sending-only, so the domain cannot be checked from here. Submit the form once to confirm.' };
+        }
+        out.keyAccepted = false;
+        return { ...out, ready: false, fix: 'Resend rejected this key. Create a new API key in Resend and paste it into RESEND_API_KEY.' };
+    } catch {
+        return { ...out, ready: null, fix: 'Could not reach Resend to check.' };
+    }
+}
+
 module.exports = async function handler(req, res) {
     const origin = req.headers.origin || '';
     if (origin && ALLOWED_ORIGINS.some((re) => re.test(origin))) {
@@ -69,6 +97,10 @@ module.exports = async function handler(req, res) {
         res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
         return res.status(204).end();
+    }
+    if (req.method === 'GET' && /[?&]health=1\b/.test(req.url || '')) {
+        res.setHeader('Cache-Control', 'no-store');
+        return res.status(200).json(await health());
     }
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
