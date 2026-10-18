@@ -1,0 +1,344 @@
+{
+    "_readme": "Source of the Plans section. Edit here, then run: python scripts/build-plans.py. Cell values: true = included, false = not included, a string = shown as text. Keep text cells short (they share a phone screen with three columns).",
+    "categories": [
+        {
+            "id": "shopify",
+            "label": "Shopify",
+            "title": "Shopify Plans",
+            "plans": [
+                {
+                    "name": "Premium Fiverr Launch Package",
+                    "short": "Launch",
+                    "icon": "gem",
+                    "desc": "The right way to start. No confusion. No cheap look. For founders who want a professional Shopify presence.",
+                    "foot": "Perfect for launching your first serious store",
+                    "highlights": [
+                        "Complete Shopify store setup",
+                        "Premium theme installation and brand styling",
+                        "Core pages: Home, Shop, Product, About, Contact, FAQ",
+                        "Mobile-optimized layout",
+                        "Checkout, payments and shipping setup",
+                        "Reviews, trust badges and essential apps",
+                        "Launch-ready structure with video training"
+                    ]
+                },
+                {
+                    "name": "Advanced Brand System",
+                    "short": "Brand System",
+                    "icon": "trophy",
+                    "popular": true,
+                    "desc": "Pure website excellence. Built to convert. Traffic is useless without conversion; this is your revenue engine.",
+                    "foot": "If you plan to run ads, this is your foundation",
+                    "highlights": [
+                        "Everything in the Launch Package",
+                        "Fully custom Shopify design",
+                        "Premium theme deep customization with custom sections",
+                        "CRO across every section",
+                        "Strategic funnel structure",
+                        "Upsells, bundles and buyer flow optimization",
+                        "Speed optimization",
+                        "Analytics and tracking ready"
+                    ]
+                },
+                {
+                    "name": "Brand Growth Empire",
+                    "short": "Empire",
+                    "icon": "rocket",
+                    "desc": "A full growth ecosystem built for scale, visibility, and sales. Where brands separate from amateurs.",
+                    "foot": "For founders who want momentum & authority",
+                    "highlights": [
+                        "Everything in the Advanced Brand System",
+                        "Google Ads + conversion tracking",
+                        "Meta Ads ecosystem setup",
+                        "TikTok organic strategy",
+                        "Instagram content strategy",
+                        "High-converting ad pages",
+                        "Brand-level execution"
+                    ]
+                }
+            ],
+            "groups": [
+                {
+                    "name": "Store setup",
+                    "rows": [
+                        ["Store setup and configuration (domain, taxes, shipping zones)", true, true, true],
+                        ["Premium theme installation", true, true, true],
+                        ["Theme customization", "Brand styling", "Deep", "Deep"],
+                        ["Fully custom Shopify design", false, true, true],
+                        ["Custom-coded Liquid sections", false, true, true],
+                        ["Core pages (Home, Shop, Product, About, Contact, FAQ)", true, true, true],
+                        ["Legal and policy pages", true, true, true],
+                        ["Product and collection setup", "Starter", "Full catalog", "Full catalog"],
+                        ["Mobile-optimized layout", true, true, true]
+                    ]
+                },
+                {
+                    "name": "Selling and conversion",
+                    "rows": [
+                        ["Checkout and payments setup", true, true, true],
+                        ["Shipping and tax rules", true, true, true],
+                        ["CRO across every section", false, true, true],
+                        ["Strategic funnel structure", false, true, true],
+                        ["Upsells, cross-sells and bundles", false, true, true],
+                        ["Reviews, trust badges and social proof", true, true, true],
+                        ["Email capture and abandoned-cart flow", false, true, true],
+                        ["Apps and integrations", "Essentials", "Advanced", "Advanced"]
+                    ]
+                },
+                {
+                    "name": "Speed, SEO and tracking",
+                    "rows": [
+                        ["Speed optimization", "Essentials", "Full", "Full"],
+                        ["On-page SEO (titles, meta, alt text)", "Basic", "Full", "Full"],
+                        ["Google Analytics 4 and Search Console", true, true, true],
+                        ["Meta Pixel and conversion tracking", false, true, true]
+                    ]
+                },
+                {
+                    "name": "Growth and marketing",
+                    "rows": [
+                        ["Google Ads + conversion tracking", false, false, true],
+                        ["Meta Ads ecosystem setup", false, false, true],
+                        ["TikTok organic strategy", false, false, true],
+                        ["Instagram content strategy", false, false, true],
+                        ["High-converting ad landing pages", false, false, true],
+                        ["Brand-level execution", false, false, true]
+                    ]
+                },
+                {
+                    "name": "Delivery and support",
+                    "rows": [
+                        ["Weekly progress updates", true, true, true],
+                        ["Unlimited revisions during development", true, true, true],
+                        ["Video training for your team", true, true, true],
+                        ["30 days post-launch support", true, true, true],
+                        ["Free lifetime technical guidance", true, true, true],
+                        ["100% satisfied or full refund", true, true, true]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "wordpress",
+            "label": "WordPress",
+            "title": "WordPress Plans",
+            "plans": [
+                {
+                    "name": "WordPress Launch Site",
+                    "short": "Launch",
+                    "icon": "globe",
+                    "desc": "A fast, professional business website on a premium theme, ready to win trust from day one.",
+                    "foot": "Perfect for service businesses and new brands",
+                    "highlights": [
+                        "Premium theme setup and brand styling",
+                        "Core business pages",
+                        "Mobile-first responsive build",
+                        "Contact forms with email notifications",
+                        "Blog setup",
+                        "Basic on-page SEO",
+                        "Security, backups and SSL",
+                        "Video training"
+                    ]
+                },
+                {
+                    "name": "WordPress Brand Pro",
+                    "short": "Brand Pro",
+                    "icon": "palette",
+                    "popular": true,
+                    "desc": "A fully custom WordPress site designed around your brand and built to turn visitors into leads.",
+                    "foot": "If your website is your sales team, start here",
+                    "highlights": [
+                        "Everything in the Launch Site",
+                        "Fully custom design in Figma",
+                        "Built with Elementor or Gutenberg blocks",
+                        "Conversion-focused page layouts",
+                        "Custom post types and fields",
+                        "Full on-page SEO and schema markup",
+                        "CRM and email marketing integration",
+                        "Speed optimization"
+                    ]
+                },
+                {
+                    "name": "WordPress Commerce & Custom",
+                    "short": "Commerce",
+                    "icon": "cart",
+                    "desc": "WooCommerce stores and custom functionality: memberships, bookings, custom plugins and integrations.",
+                    "foot": "For selling online or anything beyond a brochure site",
+                    "highlights": [
+                        "Everything in Brand Pro",
+                        "WooCommerce store setup",
+                        "Payments with Stripe and PayPal",
+                        "Products, shipping and tax rules",
+                        "Memberships, bookings or subscriptions",
+                        "Custom plugin development",
+                        "Third-party API integrations"
+                    ]
+                }
+            ],
+            "groups": [
+                {
+                    "name": "Design and build",
+                    "rows": [
+                        ["Premium theme setup", true, true, true],
+                        ["Fully custom design (Figma first)", false, true, true],
+                        ["Page builder (Elementor or Gutenberg)", true, true, true],
+                        ["Site structure", "Core pages", "Full site", "Site + store"],
+                        ["Mobile-first responsive build", true, true, true],
+                        ["Blog with categories and tags", true, true, true],
+                        ["Contact forms with email notifications", true, true, true],
+                        ["Custom post types and fields (ACF)", false, true, true],
+                        ["Multilingual setup", false, true, true],
+                        ["Custom plugin development", false, false, true]
+                    ]
+                },
+                {
+                    "name": "Online store",
+                    "rows": [
+                        ["WooCommerce store setup", false, false, true],
+                        ["Payment gateways (Stripe, PayPal)", false, false, true],
+                        ["Product, shipping and tax configuration", false, false, true],
+                        ["Memberships, bookings or subscriptions", false, false, true],
+                        ["Order and customer email templates", false, false, true]
+                    ]
+                },
+                {
+                    "name": "Speed and security",
+                    "rows": [
+                        ["Speed optimization (caching, images, CDN)", "Essentials", "Full", "Full"],
+                        ["Security hardening and firewall", true, true, true],
+                        ["Automated backups", true, true, true],
+                        ["SSL and domain setup", true, true, true]
+                    ]
+                },
+                {
+                    "name": "SEO and growth",
+                    "rows": [
+                        ["On-page SEO (Yoast or Rank Math)", "Basic", "Full", "Full"],
+                        ["Schema markup", false, true, true],
+                        ["Google Analytics 4 and Search Console", true, true, true],
+                        ["Conversion-focused layouts (CRO)", false, true, true],
+                        ["CRM and email marketing integration", false, true, true],
+                        ["Third-party API integrations", false, false, true]
+                    ]
+                },
+                {
+                    "name": "Delivery and support",
+                    "rows": [
+                        ["Weekly progress updates", true, true, true],
+                        ["Unlimited revisions during development", true, true, true],
+                        ["Video training for your team", true, true, true],
+                        ["30 days post-launch support", true, true, true],
+                        ["Free lifetime technical guidance", true, true, true],
+                        ["100% satisfied or full refund", true, true, true]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "custom",
+            "label": "Custom Software",
+            "title": "Custom Software Plans",
+            "plans": [
+                {
+                    "name": "MVP Launch",
+                    "short": "MVP",
+                    "icon": "zap",
+                    "desc": "Turn an idea into a working product, fast: the core features, done properly, ready for real users.",
+                    "foot": "Simple apps: typically 2-3 weeks",
+                    "highlights": [
+                        "Discovery call, roadmap and wireframes",
+                        "UI/UX design of the key screens",
+                        "React or Next.js frontend",
+                        "Node.js backend and custom APIs",
+                        "Database design",
+                        "Secure login and user accounts",
+                        "Cloud deployment",
+                        "Documentation and handover"
+                    ]
+                },
+                {
+                    "name": "Growth Platform",
+                    "short": "Growth",
+                    "icon": "trending-up",
+                    "popular": true,
+                    "desc": "A production-grade web application with roles, payments, integrations and an admin dashboard.",
+                    "foot": "Medium complexity: typically 4-6 weeks",
+                    "highlights": [
+                        "Everything in MVP Launch",
+                        "Full product design in Figma",
+                        "User roles and permissions",
+                        "Admin dashboard",
+                        "Payments with Stripe or PayPal",
+                        "CRM, marketing and shipping integrations",
+                        "Real-time notifications",
+                        "QA and performance testing"
+                    ]
+                },
+                {
+                    "name": "Enterprise Solution",
+                    "short": "Enterprise",
+                    "icon": "layers",
+                    "desc": "Complex, scalable systems with AI features, real-time collaboration and enterprise-grade security.",
+                    "foot": "Enterprise builds: typically 8-12 weeks",
+                    "highlights": [
+                        "Everything in Growth Platform",
+                        "A design system for your product",
+                        "AI features and automation",
+                        "Advanced roles and single sign-on",
+                        "Real-time collaboration",
+                        "Scalability and load planning",
+                        "Full security review and hardening"
+                    ]
+                }
+            ],
+            "groups": [
+                {
+                    "name": "Planning and design",
+                    "rows": [
+                        ["Discovery and strategy call", true, true, true],
+                        ["Roadmap, wireframes and technical architecture", true, true, true],
+                        ["UI/UX design in Figma", "Key screens", "Full product", "Design system"]
+                    ]
+                },
+                {
+                    "name": "Build",
+                    "rows": [
+                        ["Frontend (React or Next.js)", true, true, true],
+                        ["Backend and custom APIs (Node.js, Express)", true, true, true],
+                        ["Database design (MongoDB, PostgreSQL or MySQL)", true, true, true],
+                        ["Responsive web app (mobile and desktop)", true, true, true],
+                        ["Authentication and user accounts", true, true, true],
+                        ["User roles and permissions", false, true, true],
+                        ["Admin dashboard", false, true, true],
+                        ["Payment integration (Stripe, PayPal)", false, true, true],
+                        ["Third-party integrations (CRM, marketing, shipping)", false, true, true],
+                        ["Real-time features (chat, notifications)", false, true, true],
+                        ["AI features and automation", false, false, true],
+                        ["Single sign-on and advanced roles", false, false, true]
+                    ]
+                },
+                {
+                    "name": "Quality and launch",
+                    "rows": [
+                        ["QA and performance testing", true, true, true],
+                        ["Cloud deployment (AWS, Vercel, Digital Ocean)", true, true, true],
+                        ["Technical and API documentation", true, true, true],
+                        ["Security review", "Standard", "Standard", "Full audit"],
+                        ["Scalability and load planning", false, false, true]
+                    ]
+                },
+                {
+                    "name": "Delivery and support",
+                    "rows": [
+                        ["Typical timeline", "2-3 weeks", "4-6 weeks", "8-12 weeks"],
+                        ["Weekly progress updates and project dashboard", true, true, true],
+                        ["Team training and video tutorials", true, true, true],
+                        ["30 days post-launch support", true, true, true],
+                        ["Lifetime technical guidance", true, true, true],
+                        ["Monthly maintenance packages", "Available", "Available", "Available"]
+                    ]
+                }
+            ]
+        }
+    ]
+}

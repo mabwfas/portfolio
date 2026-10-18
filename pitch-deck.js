@@ -1,568 +1,308 @@
-/* ============================================
-   DIGITAL HEROES - ULTRA PREMIUM PITCH DECK
-   1000% Enhanced - Cinematic JavaScript
-   ============================================ */
+/* ==========================================================================
+   Digital Heroes portfolio deck
+   Section counter and arrows, scroll reveals, reading progress, plan tabs,
+   quote form, image previews, and print page footers.
+   ========================================================================== */
+(() => {
+    const sections = [...document.querySelectorAll('section.page')];
+    const total = sections.length;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pad = (n) => String(n).padStart(2, '0');
+    const $ = (id) => document.getElementById(id);
 
-document.addEventListener('DOMContentLoaded', () => {
-    initParticles();
-    initSlideNavigation();
-    initKeyboardNav();
-    initScrollObserver();
-    initScrollAnimations();
-    initCounters();
-    initAutoPlay();
-    initProgressBar();
-    initTimelineProgress();
-    hideKeyboardHint();
-});
+    /* ---------- Section counter ---------- */
+    const currentEl = $('currentSlide');
+    const totalEl = $('totalSlides');
+    const labelEl = $('slideLabel');
+    const prevBtn = $('prevBtn');
+    const nextBtn = $('nextBtn');
+    let current = 1;
 
-// Global state
-let currentSlide = 1;
-let totalSlides = 12;
-let autoPlayInterval = null;
-let isAutoPlaying = false;
-
-/* ============================================
-   PARTICLE SYSTEM
-   ============================================ */
-function initParticles() {
-    const canvas = document.getElementById('particles');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const particleCount = 80;
-
-    // Resize canvas
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Particle class
-    class Particle {
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
-            this.opacity = Math.random() * 0.5 + 0.2;
-            this.pulseSpeed = Math.random() * 0.02 + 0.01;
-            this.pulseOffset = Math.random() * Math.PI * 2;
-        }
-
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            // Wrap around screen
-            if (this.x < 0) this.x = canvas.width;
-            if (this.x > canvas.width) this.x = 0;
-            if (this.y < 0) this.y = canvas.height;
-            if (this.y > canvas.height) this.y = 0;
-
-            // Pulse opacity
-            this.currentOpacity = this.opacity + Math.sin(Date.now() * this.pulseSpeed + this.pulseOffset) * 0.2;
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${this.currentOpacity})`;
-            ctx.fill();
-        }
+    function setCurrent(n) {
+        current = n;
+        if (currentEl) currentEl.textContent = pad(n);
+        if (labelEl) labelEl.textContent = sections[n - 1].dataset.label || '';
+        if (prevBtn) prevBtn.disabled = n === 1;
+        if (nextBtn) nextBtn.disabled = n === total;
     }
 
-    // Create particles
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+    function goTo(n) {
+        if (n < 1 || n > total) return;
+        sections[n - 1].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        setCurrent(n);
     }
 
-    // Draw connections
-    function drawConnections() {
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+    if (totalEl) totalEl.textContent = pad(total);
+    setCurrent(1);
+    prevBtn?.addEventListener('click', () => goTo(current - 1));
+    nextBtn?.addEventListener('click', () => goTo(current + 1));
 
-                if (distance < 150) {
-                    const opacity = (1 - distance / 150) * 0.15;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(99, 102, 241, ${opacity})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
+    // Left/Right jump a section, like a deck. Up/Down, Space, Home and End stay
+    // native. Tabs, form fields and the image preview keep their own arrows.
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
+        if (e.target.closest('input, textarea, select, [contenteditable], [role="tablist"]')) return;
+        if (document.querySelector('.lightbox[open]')) return;
+        if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+    });
+
+    // "Current" is the section crossing the middle of the screen.
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) setCurrent(sections.indexOf(entry.target) + 1);
+            });
+        }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+        sections.forEach((s) => io.observe(s));
+    }
+
+    /* ---------- Scroll reveals ---------- */
+    const reveals = [...document.querySelectorAll('.reveal')];
+    reveals.forEach((el) => {
+        const siblings = [...el.parentElement.children].filter((c) => c.classList.contains('reveal'));
+        const i = siblings.indexOf(el);
+        if (i > 0) el.style.setProperty('--d', `${Math.min(i, 5) * 80}ms`);
+    });
+
+    const showAll = () => reveals.forEach((el) => el.classList.add('is-in'));
+    let revealObserver = null;
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+        showAll();
+    } else {
+        // Hidden-until-seen is switched on by the script that reveals, so a
+        // script that fails to load can never leave content invisible.
+        document.documentElement.classList.add('reveal-on');
+        revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('is-in');
+                revealObserver.unobserve(entry.target);
+            });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        reveals.forEach((el) => revealObserver.observe(el));
+    }
+
+    /* ---------- Reading progress ---------- */
+    const fill = $('progressFill');
+    let ticking = false;
+    function paintProgress() {
+        ticking = false;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        fill.style.transform = `scaleX(${max > 0 ? Math.min(window.scrollY / max, 1) : 0})`;
+    }
+    if (fill) {
+        window.addEventListener('scroll', () => {
+            if (!ticking) { ticking = true; requestAnimationFrame(paintProgress); }
+        }, { passive: true });
+        paintProgress();
+    }
+
+    if (reduceMotion) document.querySelector('.orbit')?.pauseAnimations?.();
+
+    /* ---------- Plan tabs ---------- */
+    const tabs = [...document.querySelectorAll('.plan-tab')];
+    function selectTab(tab, focus) {
+        tabs.forEach((t) => {
+            const on = t === tab;
+            t.setAttribute('aria-selected', String(on));
+            t.tabIndex = on ? 0 : -1;
+            const panel = $(t.getAttribute('aria-controls'));
+            if (!panel) return;
+            panel.hidden = !on;
+            // Cards in a newly shown panel may never have been observed as visible.
+            if (on) panel.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-in'));
+        });
+        if (focus) tab.focus();
+    }
+    tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => selectTab(tab));
+        tab.addEventListener('keydown', (e) => {
+            const map = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 };
+            if (!(e.key in map)) return;
+            e.preventDefault();
+            selectTab(tabs[(map[e.key] + tabs.length) % tabs.length], true);
+        });
+    });
+
+    /* ---------- Quote form ---------- */
+    const form = $('quoteForm');
+    const typeSel = $('qf-type');
+    const planSel = $('qf-plan');
+
+    // Plan names come from the plan panels, so the form can never drift from them.
+    const plansByType = {};
+    document.querySelectorAll('.plan-panel').forEach((panel) => {
+        const type = panel.dataset.type.replace(' Software', ' software');
+        plansByType[type] = [...panel.querySelectorAll('.tier-name')].map((n) => n.textContent.trim());
+    });
+
+    function fillPlans(type, chosen) {
+        if (!planSel) return;
+        planSel.replaceChildren(new Option('Not sure yet', ''));
+        (plansByType[type] || []).forEach((name) => planSel.add(new Option(name, name)));
+        planSel.value = chosen && (plansByType[type] || []).includes(chosen) ? chosen : '';
+    }
+
+    if (form && typeSel && planSel) {
+        fillPlans(typeSel.value);
+        typeSel.addEventListener('change', () => fillPlans(typeSel.value));
+
+        // Any "Get Pricing" button pre-selects its plan before the jump to the form.
+        document.querySelectorAll('[data-quote-type]').forEach((link) => {
+            link.addEventListener('click', () => {
+                typeSel.value = link.dataset.quoteType;
+                fillPlans(link.dataset.quoteType, link.dataset.quotePlan);
+                setTimeout(() => $('qf-name')?.focus({ preventScroll: true }), reduceMotion ? 0 : 700);
+            });
+        });
+
+        let startedAt = Date.now();
+        form.addEventListener('focusin', () => { if (!form.dataset.touched) { form.dataset.touched = '1'; startedAt = Date.now(); } }, { once: true });
+
+        const status = $('qf-status');
+        const submit = form.querySelector('button[type="submit"]');
+        const submitIcon = submit.querySelector('use');
+        const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[a-z]{2,}$/i;
+        const fallback = 'Email <a href="mailto:clientsuccess@digitalheroesco.com">clientsuccess@digitalheroesco.com</a> or <a href="https://wa.me/918840925421" target="_blank" rel="noopener">message us on WhatsApp</a>. Your details are still in the form.';
+
+        function fieldError(name, msg) {
+            const input = form.elements[name];
+            const field = input.closest('.field');
+            field.classList.toggle('has-error', Boolean(msg));
+            input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+            const err = $(`qf-${name}-err`);
+            if (err) err.textContent = msg || '';
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            status.textContent = '';
+            const data = Object.fromEntries(new FormData(form).entries());
+            let bad = null;
+            fieldError('name', data.name.trim() ? '' : 'Please enter your name.');
+            if (!data.name.trim()) bad = bad || 'name';
+            fieldError('email', EMAIL_RE.test(data.email.trim()) ? '' : 'Please enter a valid email address.');
+            if (!EMAIL_RE.test(data.email.trim())) bad = bad || 'email';
+            if (bad) { form.elements[bad].focus(); return; }
+
+            submit.classList.add('is-loading');
+            submit.disabled = true;
+            submitIcon.setAttribute('href', '#i-loader');
+            try {
+                const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...data, startedAt, page: location.href }),
+                });
+                const out = await res.json().catch(() => ({}));
+                if (!res.ok || !out.ok) {
+                    if (out.field) { fieldError(out.field, out.error); form.elements[out.field]?.focus(); }
+                    throw new Error(out.error || `HTTP ${res.status}`);
+                }
+                const name = data.name.trim().split(/\s+/)[0];
+                form.innerHTML = `<div class="quote-success" role="status" tabindex="-1">
+                    <svg class="ico"><use href="#i-circle-check" /></svg>
+                    <h3>Thanks, ${name.replace(/[<>&"]/g, '')}. Your request is in.</h3>
+                    <p>Our client success team will reply to <strong>${data.email.trim().replace(/[<>&"]/g, '')}</strong> with a tailored quote.</p>
+                    <p>Want to move faster? <a class="text-link" href="https://wa.me/918840925421" target="_blank" rel="noopener">Message us on WhatsApp<svg class="ico"><use href="#i-arrow-right" /></svg></a></p>
+                </div>`;
+                form.querySelector('.quote-success').focus();
+            } catch (err) {
+                status.innerHTML = `We couldn't send your request just now. ${fallback}`;
+            } finally {
+                if (submit.isConnected) {
+                    submit.classList.remove('is-loading');
+                    submit.disabled = false;
+                    submitIcon.setAttribute('href', '#i-send');
                 }
             }
-        }
-    }
-
-    // Animation loop
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        particles.forEach(particle => {
-            particle.update();
-            particle.draw();
         });
-
-        drawConnections();
-        requestAnimationFrame(animate);
     }
 
-    animate();
-}
+    /* ---------- Image previews ---------- */
+    const lb = $('lightbox');
+    const lbImg = $('lbImg');
+    const lbCap = $('lbCap');
+    const lbCount = $('lbCount');
+    const lbPrev = $('lbPrev');
+    const lbNext = $('lbNext');
+    let group = [];
+    let at = 0;
+    let opener = null;
 
-/* ============================================
-   SLIDE NAVIGATION
-   ============================================ */
-function initSlideNavigation() {
-    const slides = document.querySelectorAll('.slide');
-    const indicatorsContainer = document.getElementById('slideIndicators');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const currentSlideEl = document.getElementById('currentSlide');
-    const totalSlidesEl = document.getElementById('totalSlides');
-
-    totalSlides = slides.length;
-    totalSlidesEl.textContent = totalSlides;
-
-    // Create slide indicators
-    slides.forEach((slide, index) => {
-        const indicator = document.createElement('div');
-        indicator.className = 'slide-indicator' + (index === 0 ? ' active' : '');
-        indicator.addEventListener('click', () => goToSlide(index + 1));
-        indicatorsContainer.appendChild(indicator);
+    const zoomables = [...document.querySelectorAll('.phone, .work-shot, .sheet')].filter((el) => el.querySelector('img'));
+    zoomables.forEach((el) => {
+        const img = el.querySelector('img');
+        el.classList.add('zoom');
+        el.tabIndex = 0;
+        el.setAttribute('role', 'button');
+        el.setAttribute('aria-label', `Enlarge: ${img.alt}`);
+        const open = () => {
+            const section = el.closest('section');
+            group = zoomables.filter((z) => z.closest('section') === section).map((z) => z.querySelector('img'));
+            opener = el;
+            show(group.indexOf(img));
+            lb.showModal();
+        };
+        el.addEventListener('click', open);
+        el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
     });
 
-    // Navigation buttons
-    prevBtn.addEventListener('click', () => {
-        if (currentSlide > 1) goToSlide(currentSlide - 1);
-    });
+    function show(i) {
+        at = (i + group.length) % group.length;
+        const img = group[at];
+        img.loading = 'eager';
+        lbImg.classList.add('is-swapping');
+        const swap = () => {
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
+            lbCap.textContent = img.alt;
+            lbImg.classList.remove('is-swapping');
+        };
+        reduceMotion ? swap() : setTimeout(swap, 120);
+        lbCount.textContent = group.length > 1 ? `${at + 1} / ${group.length}` : '';
+        lbPrev.hidden = lbNext.hidden = group.length < 2;
+    }
 
-    nextBtn.addEventListener('click', () => {
-        if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
-    });
-}
-
-function goToSlide(slideNumber) {
-    const slides = document.querySelectorAll('.slide');
-    const indicators = document.querySelectorAll('.slide-indicator');
-    const currentSlideEl = document.getElementById('currentSlide');
-
-    if (slideNumber < 1 || slideNumber > totalSlides) return;
-
-    currentSlide = slideNumber;
-
-    // Scroll to slide with smooth animation
-    slides[slideNumber - 1].scrollIntoView({ behavior: 'smooth' });
-
-    // Update indicators with animation
-    indicators.forEach((indicator, index) => {
-        indicator.classList.toggle('active', index === slideNumber - 1);
-    });
-
-    // Update counter with animation
-    currentSlideEl.style.transform = 'translateY(-10px)';
-    currentSlideEl.style.opacity = '0';
-
-    setTimeout(() => {
-        currentSlideEl.textContent = String(slideNumber).padStart(2, '0');
-        currentSlideEl.style.transform = 'translateY(0)';
-        currentSlideEl.style.opacity = '1';
-    }, 150);
-
-    updateButtonStates();
-    updateProgressBar();
-}
-
-function updateButtonStates() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    prevBtn.style.opacity = currentSlide === 1 ? '0.3' : '1';
-    prevBtn.style.pointerEvents = currentSlide === 1 ? 'none' : 'auto';
-    nextBtn.style.opacity = currentSlide === totalSlides ? '0.3' : '1';
-    nextBtn.style.pointerEvents = currentSlide === totalSlides ? 'none' : 'auto';
-}
-
-/* ============================================
-   PROGRESS BAR
-   ============================================ */
-function initProgressBar() {
-    updateProgressBar();
-}
-
-function updateProgressBar() {
-    const progressFill = document.getElementById('progressFill');
-    const progress = ((currentSlide) / totalSlides) * 100;
-    progressFill.style.width = `${progress}%`;
-}
-
-/* ============================================
-   KEYBOARD NAVIGATION
-   ============================================ */
-function initKeyboardNav() {
-    document.addEventListener('keydown', (e) => {
-        switch (e.key) {
-            case 'ArrowRight':
-            case 'ArrowDown':
-                e.preventDefault();
-                if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
-                break;
-            case 'ArrowLeft':
-            case 'ArrowUp':
-                e.preventDefault();
-                if (currentSlide > 1) goToSlide(currentSlide - 1);
-                break;
-            case ' ':
-                e.preventDefault();
-                toggleAutoPlay();
-                break;
-            case 'Home':
-                e.preventDefault();
-                goToSlide(1);
-                break;
-            case 'End':
-                e.preventDefault();
-                goToSlide(totalSlides);
-                break;
-            case 'f':
-            case 'F':
-                toggleFullscreen();
-                break;
-        }
-    });
-}
-
-/* ============================================
-   SCROLL OBSERVER
-   ============================================ */
-function initScrollObserver() {
-    const slides = document.querySelectorAll('.slide');
-    const indicators = document.querySelectorAll('.slide-indicator');
-    const currentSlideEl = document.getElementById('currentSlide');
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const slideNumber = parseInt(entry.target.dataset.slide);
-                currentSlide = slideNumber;
-
-                // Update indicators
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === slideNumber - 1);
-                });
-
-                // Update counter
-                currentSlideEl.textContent = String(slideNumber).padStart(2, '0');
-
-                updateButtonStates();
-                updateProgressBar();
-
-                // Trigger slide animations
-                triggerSlideAnimations(entry.target);
-            }
+    if (lb) {
+        $('lbClose').addEventListener('click', () => lb.close());
+        lbPrev.addEventListener('click', () => show(at - 1));
+        lbNext.addEventListener('click', () => show(at + 1));
+        lb.addEventListener('click', (e) => { if (e.target === lb) lb.close(); });
+        lb.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') { e.preventDefault(); show(at + 1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); show(at - 1); }
         });
-    }, observerOptions);
-
-    slides.forEach(slide => observer.observe(slide));
-}
-
-/* ============================================
-   SCROLL ANIMATIONS
-   ============================================ */
-function initScrollAnimations() {
-    // Initial trigger for first slide
-    const firstSlide = document.querySelector('.slide[data-slide="1"]');
-    if (firstSlide) {
-        setTimeout(() => triggerSlideAnimations(firstSlide), 500);
-    }
-}
-
-function triggerSlideAnimations(slide) {
-    const animateElements = slide.querySelectorAll('.animate-in');
-
-    animateElements.forEach((el, index) => {
-        const delay = parseInt(el.dataset.delay) || index * 100;
-
-        setTimeout(() => {
-            el.classList.add('visible');
-        }, delay);
-    });
-}
-
-/* ============================================
-   COUNTER ANIMATIONS
-   ============================================ */
-function initCounters() {
-    const counters = document.querySelectorAll('[data-value]');
-
-    const observerOptions = {
-        threshold: 0.5
-    };
-
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.dataset.animated) {
-                entry.target.dataset.animated = 'true';
-                animateCounter(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    counters.forEach(counter => counterObserver.observe(counter));
-}
-
-function animateCounter(element) {
-    const target = parseFloat(element.dataset.value);
-    const duration = 2000;
-    const startTime = performance.now();
-    const isDecimal = target % 1 !== 0;
-    const isLargeNumber = target >= 10000;
-
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        // Easing function (ease-out cubic)
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        let current = target * easeOut;
-
-        // Format based on number type
-        if (isLargeNumber) {
-            // Format as X.XM
-            element.textContent = (current / 1000000).toFixed(1).replace('.0', '');
-        } else if (isDecimal) {
-            element.textContent = current.toFixed(1);
-        } else {
-            element.textContent = Math.floor(current).toLocaleString();
-        }
-
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        } else {
-            // Final value
-            if (isLargeNumber) {
-                element.textContent = (target / 1000000).toFixed(1).replace('.0', '');
-            } else if (isDecimal) {
-                element.textContent = target.toFixed(1);
-            } else {
-                element.textContent = target.toLocaleString();
-            }
-        }
+        lb.addEventListener('close', () => opener?.focus({ preventScroll: true }));
     }
 
-    requestAnimationFrame(update);
-}
-
-/* ============================================
-   AUTO PLAY
-   ============================================ */
-function initAutoPlay() {
-    const autoPlayBtn = document.getElementById('autoPlayBtn');
-
-    autoPlayBtn.addEventListener('click', toggleAutoPlay);
-}
-
-function toggleAutoPlay() {
-    const autoPlayBtn = document.getElementById('autoPlayBtn');
-
-    if (isAutoPlaying) {
-        stopAutoPlay();
-    } else {
-        startAutoPlay();
-    }
-
-    autoPlayBtn.classList.toggle('playing', isAutoPlaying);
-}
-
-function startAutoPlay() {
-    isAutoPlaying = true;
-
-    autoPlayInterval = setInterval(() => {
-        if (currentSlide < totalSlides) {
-            goToSlide(currentSlide + 1);
-        } else {
-            goToSlide(1); // Loop back to start
-        }
-    }, 5000); // 5 seconds per slide
-}
-
-function stopAutoPlay() {
-    isAutoPlaying = false;
-
-    if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-        autoPlayInterval = null;
-    }
-}
-
-/* ============================================
-   TIMELINE PROGRESS
-   ============================================ */
-function initTimelineProgress() {
-    const timeline = document.getElementById('timelineProgress');
-    if (!timeline) return;
-
-    const processSlide = document.querySelector('.slide-process');
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Animate timeline progress
-                setTimeout(() => {
-                    timeline.style.width = '100%';
-                }, 500);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    if (processSlide) {
-        observer.observe(processSlide);
-    }
-}
-
-/* ============================================
-   FULLSCREEN
-   ============================================ */
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-            console.log('Fullscreen not available:', err);
-        });
-    } else {
-        document.exitFullscreen();
-    }
-}
-
-/* ============================================
-   KEYBOARD HINT
-   ============================================ */
-function hideKeyboardHint() {
-    const hint = document.getElementById('keyboardHint');
-    if (!hint) return;
-
-    // Hide after 5 seconds
-    setTimeout(() => {
-        hint.style.opacity = '0';
-        setTimeout(() => {
-            hint.style.display = 'none';
-        }, 500);
-    }, 5000);
-}
-
-/* ============================================
-   TOUCH SUPPORT
-   ============================================ */
-let touchStartY = 0;
-let touchEndY = 0;
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.addEventListener('touchstart', (e) => {
-    touchStartY = e.changedTouches[0].screenY;
-    touchStartX = e.changedTouches[0].screenX;
-}, { passive: true });
-
-document.addEventListener('touchend', (e) => {
-    touchEndY = e.changedTouches[0].screenY;
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-}, { passive: true });
-
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const diffY = touchStartY - touchEndY;
-    const diffX = touchStartX - touchEndX;
-
-    // Prioritize vertical swipes
-    if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > swipeThreshold) {
-        if (diffY > 0 && currentSlide < totalSlides) {
-            goToSlide(currentSlide + 1);
-        } else if (diffY < 0 && currentSlide > 1) {
-            goToSlide(currentSlide - 1);
-        }
-    }
-}
-
-/* ============================================
-   CURSOR GLOW EFFECT
-   ============================================ */
-(function initCursorGlow() {
-    const glow = document.createElement('div');
-    glow.className = 'cursor-glow';
-    document.body.appendChild(glow);
-
-    const style = document.createElement('style');
-    style.textContent = `
-        .cursor-glow {
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent 60%);
-            pointer-events: none;
-            z-index: 1;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
-            opacity: 0;
-        }
-        .cursor-glow.visible {
-            opacity: 1;
-        }
-    `;
-    document.head.appendChild(style);
-
-    let mouseX = 0, mouseY = 0;
-    let glowX = 0, glowY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        glow.classList.add('visible');
+    /* ---------- Print ----------
+       Each printed sheet gets a footer with its page number. The plans section
+       prints as one sheet per plan type, so those panels are the sheets. */
+    const printPages = [...document.querySelectorAll('section.page:not(.plans), .plan-panel')]; // document order
+    printPages.forEach((page, i) => {
+        const foot = document.createElement('div');
+        foot.className = 'print-foot';
+        foot.setAttribute('aria-hidden', 'true');
+        foot.innerHTML = `<span><b>Digital Heroes</b> &nbsp;Portfolio</span><span>portfolio.digitalheroes.co.in</span><span>${pad(i + 1)} / ${pad(printPages.length)}</span>`;
+        page.appendChild(foot);
     });
 
-    document.addEventListener('mouseleave', () => {
-        glow.classList.remove('visible');
-    });
-
-    // Smooth follow
-    function updateGlow() {
-        glowX += (mouseX - glowX) * 0.1;
-        glowY += (mouseY - glowY) * 0.1;
-
-        glow.style.left = glowX + 'px';
-        glow.style.top = glowY + 'px';
-
-        requestAnimationFrame(updateGlow);
+    // Lazy images that were never scrolled to can print as empty boxes.
+    function loadAllImages() {
+        const images = [...document.images];
+        images.forEach((img) => { img.loading = 'eager'; });
+        return Promise.all(images.map((img) => (img.complete
+            ? Promise.resolve()
+            : new Promise((resolve) => {
+                img.addEventListener('load', resolve, { once: true });
+                img.addEventListener('error', resolve, { once: true });
+            }))));
     }
-    updateGlow();
+    window.addEventListener('beforeprint', () => { showAll(); loadAllImages(); });
+
+    // Used by scripts/build-pdf.py.
+    window.loadAllImages = loadAllImages;
+    window.revealAll = showAll;
 })();
-
-/* ============================================
-   PRELOADER (Optional)
-   ============================================ */
-window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-
-    // Trigger first slide animations
-    const firstSlide = document.querySelector('.slide[data-slide="1"]');
-    if (firstSlide) {
-        triggerSlideAnimations(firstSlide);
-    }
-});
