@@ -1,0 +1,433 @@
+{
+  "_readme": "Stores in the Live Previews viewer. gallery: true shows the store in the Live Previews grid; false keeps it previewable only from its case-study card. url must be a bare https://host/ (never paste links carrying key=, _bt= or preview_theme_id tokens). After editing: python scripts/capture-previews.py, then python scripts/build-showcase.py, then python scripts/build-pdf.py.",
+  "stores": [
+    {
+      "slug": "crafted-fixtures",
+      "name": "Crafted Fixtures",
+      "niche": "LED Bathroom Mirrors",
+      "platform": "WordPress",
+      "url": "https://craftedfixtures.com/",
+      "gallery": true,
+      "frameable": true,
+      "desktop": {
+        "w": 1280,
+        "h": 4912,
+        "tiles": [
+          4912
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 11356,
+        "tiles": [
+          8000,
+          3356
+        ]
+      },
+      "captured": "2026-10-19",
+      "method": {
+        "desktop": "fullpage",
+        "mobile": "scroll"
+      }
+    },
+    {
+      "slug": "vslf",
+      "name": "VSLF",
+      "niche": "Athleisure Apparel",
+      "platform": "Shopify",
+      "url": "https://vslf.co.uk/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 4162,
+        "tiles": [
+          4162
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 10218,
+        "tiles": [
+          8000,
+          2218
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "stil",
+      "name": "STIL",
+      "niche": "Minimalist Caps",
+      "platform": "Shopify",
+      "url": "https://stilcollective.com/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 2898,
+        "tiles": [
+          2898
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 5906,
+        "tiles": [
+          5906
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "code-brew",
+      "name": "Code Brew",
+      "niche": "Specialty Coffee",
+      "platform": "Shopify",
+      "url": "https://thecodebrew.co/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 11914,
+        "tiles": [
+          6000,
+          5914
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 29914,
+        "tiles": [
+          8000,
+          8000,
+          8000,
+          5914
+        ]
+      },
+      "captured": "2026-10-19",
+      "method": {
+        "desktop": "fullpage",
+        "mobile": "fullpage"
+      }
+    },
+    {
+      "slug": "harrow-collection",
+      "name": "Harrow Collection",
+      "niche": "Italian Leather Belts",
+      "platform": "Shopify",
+      "url": "https://harrowcollection.pl/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 9925,
+        "tiles": [
+          6000,
+          3925
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 34416,
+        "tiles": [
+          8000,
+          8000,
+          8000,
+          8000,
+          2416
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "imani-fragrance",
+      "name": "Imani Fragrance Studio",
+      "niche": "Luxury Perfume",
+      "platform": "Shopify",
+      "url": "https://www.imanifragrancestudio.com/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 8247,
+        "tiles": [
+          6000,
+          2247
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 25062,
+        "tiles": [
+          8000,
+          8000,
+          8000,
+          1062
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "pack-paleis",
+      "name": "Pack Paleis",
+      "niche": "Trading Cards",
+      "platform": "Shopify",
+      "url": "https://packpaleis.nl/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 3181,
+        "tiles": [
+          3181
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 10374,
+        "tiles": [
+          8000,
+          2374
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "finer",
+      "name": "Finer",
+      "niche": "Engagement & Bridal Rings",
+      "platform": "Shopify",
+      "url": "https://finerjewellery.com/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 3822,
+        "tiles": [
+          3822
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 9888,
+        "tiles": [
+          8000,
+          1888
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "k-star",
+      "name": "K Star",
+      "niche": "Streetwear Caps",
+      "platform": "Shopify",
+      "url": "https://kstarofficial.com/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 4935,
+        "tiles": [
+          4935
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 16322,
+        "tiles": [
+          8000,
+          8000,
+          322
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "oak-and-earthe",
+      "name": "Oak & Earthe",
+      "niche": "Fine Jewellery",
+      "platform": "Shopify",
+      "url": "https://oakandearthe.com/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 9070,
+        "tiles": [
+          6000,
+          3070
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 20190,
+        "tiles": [
+          8000,
+          8000,
+          4190
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "saint-sebastian",
+      "name": "Saint Sebastian",
+      "niche": "Womenswear",
+      "platform": "Shopify",
+      "url": "https://saintsebastianstudio.com/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 9453,
+        "tiles": [
+          6000,
+          3453
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 18108,
+        "tiles": [
+          8000,
+          8000,
+          2108
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "bolderglow",
+      "name": "Bolderglow",
+      "niche": "Glow-in-the-Dark Toys",
+      "platform": "Shopify",
+      "url": "https://bolderglow.com/",
+      "gallery": true,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 7588,
+        "tiles": [
+          6000,
+          1588
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 17424,
+        "tiles": [
+          8000,
+          8000,
+          1424
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "big-game-sports",
+      "name": "Big Game Sports",
+      "niche": "Sports Equipment",
+      "platform": "Shopify",
+      "url": "https://biggamesports.co.uk/",
+      "gallery": false,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 5006,
+        "tiles": [
+          5006
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 15126,
+        "tiles": [
+          8000,
+          7126
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "coffeecupshop",
+      "name": "CoffeeCupShop",
+      "niche": "Custom Drinkware",
+      "platform": "Shopify",
+      "url": "https://coffeecupshop.eu/",
+      "gallery": false,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 4652,
+        "tiles": [
+          4652
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 12354,
+        "tiles": [
+          8000,
+          4354
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "love-this-for-us",
+      "name": "Love This For Us",
+      "niche": "Specialty Coffee & Merch",
+      "platform": "Shopify",
+      "url": "https://lovethisforuscoffee.com/",
+      "gallery": false,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 7220,
+        "tiles": [
+          6000,
+          1220
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 19616,
+        "tiles": [
+          8000,
+          8000,
+          3616
+        ]
+      },
+      "captured": "2026-10-19"
+    },
+    {
+      "slug": "nutripium",
+      "name": "Nutripium",
+      "niche": "Supplements",
+      "platform": "Shopify",
+      "url": "https://www.nutripium.com/",
+      "gallery": false,
+      "frameable": false,
+      "desktop": {
+        "w": 1280,
+        "h": 8059,
+        "tiles": [
+          6000,
+          2059
+        ]
+      },
+      "mobile": {
+        "w": 780,
+        "h": 19144,
+        "tiles": [
+          8000,
+          8000,
+          3144
+        ]
+      },
+      "captured": "2026-10-19"
+    }
+  ]
+}

@@ -60,8 +60,32 @@ function buildEmail(f) {
 }
 
 // GET /api/contact?health=1 -> is the form able to send? Sends no email.
-// Reports only booleans and the sender domain, never the key.
+// Reports only booleans and the sender domain, never the key. The answer is
+// cached per instance for 10 minutes so the URL cannot be used to burn the
+// Resend account's API rate limit (that account also serves the main site).
+const HEALTH_TTL_MS = 10 * 60 * 1000;
+let healthCache = null;
 async function health() {
+    if (healthCache && Date.now() - healthCache.at < HEALTH_TTL_MS) return healthCache.value;
+    const value = await checkHealth();
+    healthCache = { at: Date.now(), value };
+    return value;
+}
+
+// Best-effort per-visitor limit on real submissions (per serverless instance).
+const RATE_WINDOW_MS = 15 * 60 * 1000;
+const RATE_MAX = 5;
+const hits = new Map();
+function rateLimited(ip) {
+    const now = Date.now();
+    const recent = (hits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
+    recent.push(now);
+    hits.set(ip, recent);
+    if (hits.size > 5000) hits.clear();
+    return recent.length > RATE_MAX;
+}
+
+async function checkHealth() {
     const from = process.env.RESEND_FROM || FROM_DEFAULT;
     const senderDomain = (from.match(/@([^>\s]+)/) || [])[1] || null;
     const out = { keyConfigured: Boolean(process.env.RESEND_API_KEY), keyAccepted: null, senderDomain, senderVerified: null };
@@ -106,8 +130,13 @@ module.exports = async function handler(req, res) {
         res.setHeader('Allow', 'POST');
         return res.status(405).json({ ok: false, error: 'Method not allowed.' });
     }
-    if (origin && !ALLOWED_ORIGINS.some((re) => re.test(origin))) {
+    // Browsers always send Origin on this POST; requiring it stops casual scripts.
+    if (!origin || !ALLOWED_ORIGINS.some((re) => re.test(origin))) {
         return res.status(403).json({ ok: false, error: 'Forbidden.' });
+    }
+    const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+    if (rateLimited(ip || 'unknown')) {
+        return res.status(429).json({ ok: false, error: 'Too many requests. Please email us instead.' });
     }
 
     const body = await readJson(req);

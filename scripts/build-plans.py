@@ -9,6 +9,10 @@ import html
 import json
 import pathlib
 import re
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from sections import renumber  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = json.loads((ROOT / "scripts" / "plans.json").read_text(encoding="utf-8"))
@@ -123,6 +127,7 @@ src = INDEX.read_text(encoding="utf-8")
 new, n = re.subn(r"<!-- PLANS:START.*?<!-- PLANS:END -->", lambda m: section, src, flags=re.S)
 if n != 1:
     raise SystemExit("PLANS markers not found exactly once in index.html")
+new, _ = renumber(new)  # plan numbers follow the section's position
 INDEX.write_text(new, encoding="utf-8")
 rows = sum(len(g["rows"]) for c in cats for g in c["groups"])
 print(f"Plans section rebuilt: {len(cats)} categories, {sum(len(c['plans']) for c in cats)} plans, {rows} comparison rows")

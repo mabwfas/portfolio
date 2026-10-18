@@ -42,7 +42,7 @@
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
         if (e.target.closest('input, textarea, select, [contenteditable], [role="tablist"]')) return;
-        if (document.querySelector('.lightbox[open]')) return;
+        if (document.querySelector('dialog[open]')) return;
         if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
         if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
     });
@@ -275,6 +275,229 @@
             if (e.key === 'ArrowLeft') { e.preventDefault(); show(at - 1); }
         });
         lb.addEventListener('close', () => opener?.focus({ preventScroll: true }));
+    }
+
+    /* ---------- Live store previews ----------
+       A theme-store style viewer: desktop and mobile frames, store to store
+       navigation, and a shareable #preview=<slug> link. Most Shopify stores
+       refuse to be framed (X-Frame-Options / frame-ancestors), so the default
+       view is a full-page capture of the live store; stores that allow framing
+       also get an Interactive mode that loads the real site in a sandbox. */
+    const viewer = $('viewer');
+    const pStores = (() => {
+        try { return JSON.parse($('previewData')?.textContent || '{}').stores || []; } catch { return []; }
+    })();
+    const bySlug = new Map(pStores.map((s) => [s.slug, s]));
+    const vw = {
+        stage: $('vwStage'), screen: $('vwScreen'), name: $('vwName'), niche: $('vwNiche'), url: $('vwUrl'),
+        visit: $('vwVisit'), count: $('vwCount'), mode: $('vwMode'), note: $('vwNote'), live: $('vwLive'),
+        prev: $('vwPrev'), next: $('vwNext'),
+    };
+    const deviceBtns = viewer ? [...viewer.querySelectorAll('.vw-devices [data-device]')] : [];
+    let pList = [];          // slugs the arrows step through (the gallery, or the case studies)
+    let pAt = 0;
+    let pDevice = window.matchMedia('(max-width: 640px)').matches ? 'mobile' : 'desktop';
+    let pLive = false;
+    let pOpener = null;
+    let renderSeq = 0;
+    let tileObserver = null;
+    const currentStore = () => bySlug.get(pList[pAt]);
+    const fmtDate = (iso) => {
+        const d = iso ? new Date(`${iso}T00:00:00`) : null;
+        return d && !Number.isNaN(d.getTime()) ? d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'recently';
+    };
+
+    // Opened from the gallery (or a gallery store's link): step through the
+    // visible gallery. Opened from a case-study card: step through those.
+    function listFor(slug) {
+        const gallery = [...document.querySelectorAll('.gcard:not([hidden]) .gcard-shot')].map((b) => b.dataset.preview);
+        if (gallery.includes(slug)) return gallery;
+        const others = pStores.filter((s) => !gallery.includes(s.slug) && !document.querySelector(`.gcard [data-preview="${s.slug}"]`)).map((s) => s.slug);
+        return others.includes(slug) ? others : [slug];
+    }
+
+    function fitFrame() {
+        const frame = vw.screen.querySelector('iframe');
+        if (!frame) return;
+        const base = pDevice === 'desktop' ? 1440 : 390;
+        const scale = vw.screen.clientWidth / base;
+        frame.style.width = `${base}px`;
+        frame.style.height = `${vw.screen.clientHeight / scale}px`;
+        frame.style.transform = `scale(${scale})`;
+    }
+
+    function setDevice(device) {
+        pDevice = device;
+        vw.stage.dataset.view = device;
+        deviceBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.device === device)));
+    }
+
+    function announce(s) {
+        if (vw.live) vw.live.textContent = `${s.name}, ${s.niche}. Store ${pAt + 1} of ${pList.length}, ${pDevice} view.`;
+    }
+
+    function renderShots(s) {
+        const token = ++renderSeq;
+        tileObserver?.disconnect();
+        vw.screen.querySelectorAll('img').forEach((img) => { img.removeAttribute('src'); });
+        vw.screen.replaceChildren();
+        vw.screen.scrollTop = 0;
+        vw.screen.classList.add('is-loading');
+        vw.screen.classList.toggle('is-frame', pLive);
+        const done = () => { if (token === renderSeq) vw.screen.classList.remove('is-loading'); };
+        if (pLive) {
+            const frame = document.createElement('iframe');
+            frame.title = `${s.name}, live site`;
+            frame.referrerPolicy = 'strict-origin-when-cross-origin';
+            // The store runs normally but cannot navigate or take over the portfolio tab.
+            frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
+            frame.addEventListener('load', done, { once: true });
+            frame.src = s.url;
+            vw.screen.append(frame);
+            requestAnimationFrame(fitFrame);
+            vw.note.textContent = 'Live site, running inside the preview. Use Visit live store to open it in its own tab.';
+            return;
+        }
+        // Long pages are stacked tiles; width/height reserve each tile's space so
+        // scrolling never jumps. Lower tiles load as they approach the frame.
+        const shot = s[pDevice];
+        const imgs = shot.tiles.map((t, i) => {
+            const img = new Image(shot.w, t.h);
+            img.decoding = 'async';
+            img.alt = i === 0 ? `${s.name} ${pDevice} homepage, full page` : '';
+            if (i === 0) {
+                img.addEventListener('load', done, { once: true });
+                img.addEventListener('error', done, { once: true });
+                img.src = t.src;
+            } else {
+                img.dataset.src = t.src;
+            }
+            vw.screen.append(img);
+            return img;
+        });
+        if ('IntersectionObserver' in window) {
+            tileObserver = new IntersectionObserver((entries) => entries.forEach((e) => {
+                if (!e.isIntersecting || !e.target.dataset.src) return;
+                e.target.src = e.target.dataset.src;
+                delete e.target.dataset.src;
+                tileObserver.unobserve(e.target);
+            }), { root: vw.screen, rootMargin: '0px 0px 200% 0px' });
+            imgs.slice(1).forEach((img) => tileObserver.observe(img));
+        } else {
+            imgs.slice(1).forEach((img) => { img.src = img.dataset.src; });
+        }
+        vw.note.textContent = `Full-page capture of the live store, ${pDevice} view, taken ${fmtDate(s.captured)}. Scroll inside the frame to explore.`;
+    }
+
+    function renderPreview() {
+        const s = currentStore();
+        if (!s) return;
+        if (!s.frameable) pLive = false;
+        vw.name.textContent = s.name;
+        vw.niche.textContent = `${s.niche} · ${s.platform}`;
+        vw.url.textContent = s.host;
+        vw.visit.href = s.url;
+        vw.visit.setAttribute('aria-label', `Visit ${s.name} live store (opens in a new tab)`);
+        vw.count.textContent = `${pAt + 1} / ${pList.length}`;
+        vw.prev.hidden = vw.next.hidden = pList.length < 2;
+        setDevice(pDevice);
+        if (!s.frameable && document.activeElement === vw.mode) (vw.next.hidden ? vw.screen : vw.next).focus();
+        vw.mode.hidden = !s.frameable;
+        vw.mode.setAttribute('aria-pressed', String(pLive));
+        renderShots(s);
+        announce(s);
+        // Warm the next store so stepping through feels instant.
+        const next = bySlug.get(pList[(pAt + 1) % pList.length]);
+        if (next && next !== s) new Image().src = next[pDevice].tiles[0].src;
+    }
+
+    function openPreview(slug, opener) {
+        if (!viewer || !bySlug.has(slug)) return;
+        pList = listFor(slug);
+        pAt = pList.indexOf(slug);
+        pOpener = opener || null;
+        pLive = false;
+        renderPreview();
+        if (!viewer.open) {
+            viewer.showModal();
+            vw.screen.focus({ preventScroll: true });
+        }
+        history.replaceState(null, '', `#preview=${slug}`);
+    }
+
+    function stepPreview(d) {
+        if (pList.length < 2) return;
+        pAt = (pAt + d + pList.length) % pList.length;
+        pLive = false;
+        renderPreview();
+        history.replaceState(null, '', `#preview=${pList[pAt]}`);
+    }
+
+    if (viewer && pStores.length) {
+        // Case-study cards in "Stores We've Built" get a Live Preview when their store is in the data.
+        const byHost = new Map(pStores.map((s) => [s.host, s]));
+        document.querySelectorAll('.work').forEach((card) => {
+            const link = card.querySelector('.work-link[href^="http"]');
+            if (!link) return;
+            const s = byHost.get(new URL(link.href).hostname.replace(/^www\./, ''));
+            if (!s) return;
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'work-preview no-print';
+            btn.dataset.preview = s.slug;
+            btn.setAttribute('aria-label', `Live preview of ${s.name}`);
+            btn.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-eye" /></svg>Live Preview';
+            const row = document.createElement('div');
+            row.className = 'work-actions';
+            link.replaceWith(row);
+            row.append(btn, link);
+        });
+
+        document.addEventListener('click', (e) => {
+            const trigger = e.target.closest('[data-preview]');
+            if (trigger && !viewer.contains(trigger)) { e.preventDefault(); openPreview(trigger.dataset.preview, trigger); }
+        });
+        deviceBtns.forEach((b) => b.addEventListener('click', () => {
+            if (b.dataset.device === pDevice) return;
+            setDevice(b.dataset.device);
+            const s = currentStore();
+            // A live site just reflows to the new width; it keeps the visitor's place.
+            if (pLive && vw.screen.querySelector('iframe')) { requestAnimationFrame(fitFrame); announce(s); return; }
+            renderShots(s);
+            announce(s);
+        }));
+        vw.mode.addEventListener('click', () => { pLive = !pLive; renderPreview(); });
+        vw.prev.addEventListener('click', () => stepPreview(-1));
+        vw.next.addEventListener('click', () => stepPreview(1));
+        $('vwClose').addEventListener('click', () => viewer.close());
+        viewer.addEventListener('keydown', (e) => {
+            if (e.target.closest('input, textarea, select')) return;
+            if (e.key === 'ArrowRight') { e.preventDefault(); stepPreview(1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); stepPreview(-1); }
+        });
+        viewer.addEventListener('close', () => {
+            renderSeq++;
+            tileObserver?.disconnect();
+            vw.screen.replaceChildren(); // stops any live iframe and pending tiles
+            history.replaceState(null, '', location.pathname + location.search);
+            pOpener?.focus({ preventScroll: true });
+        });
+        window.addEventListener('resize', fitFrame);
+
+        // Gallery platform filter (shown only when every platform has two or more stores).
+        document.querySelectorAll('.gfilter').forEach((chip) => chip.addEventListener('click', () => {
+            const f = chip.dataset.filter;
+            document.querySelectorAll('.gfilter').forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+            document.querySelectorAll('.gcard').forEach((card) => { card.hidden = f !== 'all' && card.dataset.platform !== f; });
+        }));
+
+        // Shared links open straight into a store: portfolio.digitalheroes.co.in/#preview=<slug>
+        const fromHash = () => {
+            const m = location.hash.match(/^#preview=([a-z0-9-]+)$/);
+            if (m && (!viewer.open || pList[pAt] !== m[1])) openPreview(m[1]);
+        };
+        fromHash();
+        window.addEventListener('hashchange', fromHash);
     }
 
     /* ---------- Print ----------
